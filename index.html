@@ -1,0 +1,314 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="个人作品集-分形噪波的十字路口">
+    <title>分形噪波的十字路口</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Noto+Sans+SC:wght@300;400;500;600;700&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+    <script>window.scrollTo(0, 0);</script>
+    <!-- Video Modal -->
+    <div class="video-modal" id="videoModal">
+        <div class="modal-backdrop"></div>
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">
+                <span>×</span>
+            </button>
+            <div class="modal-video-wrapper">
+                <video id="modalVideo" controls playsinline preload="auto"></video>
+                <iframe id="modalIframe" src="" frameborder="0" allowfullscreen
+                    style="display:none;width:100%;height:100%;"></iframe>
+            </div>
+            <div class="modal-info">
+                <h2 id="modalTitle"></h2>
+                <p id="modalDesc"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Cursor -->
+    <div class="cursor"></div>
+    <div class="cursor-follower"></div>
+
+    <!-- Navigation Header -->
+    <header class="header">
+        <div class="logo">
+            <span class="logo-icon">✦</span>
+            <span class="logo-text">Portfolio</span>
+        </div>
+        <nav class="main-nav">
+            <div class="nav-indicator" id="navIndicator"></div>
+            <a href="#about" class="nav-link active" data-section="about">
+                <span class="nav-icon">👤</span>
+                <span class="nav-text">个人简介</span>
+            </a>
+            <a href="#vibe-coding" class="nav-link" data-section="vibe-coding">
+                <span class="nav-icon">⚡</span>
+                <span class="nav-text">Vibe Coding</span>
+            </a>
+            <a href="#projects" class="nav-link" data-section="projects">
+                <span class="nav-icon">🎨</span>
+                <span class="nav-text">作品与教程</span>
+            </a>
+            <a href="#tech-blog" class="nav-link" data-section="tech-blog">
+                <span class="nav-icon">📝</span>
+                <span class="nav-text">技术专栏</span>
+            </a>
+        </nav>
+        <div class="header-actions">
+            <button class="theme-toggle" id="themeToggle" title="切换主题">
+                <span class="theme-icon">🌙</span>
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Section 1: About / Personal Introduction -->
+        <section id="about" class="section section-about active">
+            <div class="about-container">
+                <!-- Interactive Hero -->
+                <div class="hero-canvas-container">
+                    <!-- HUD Corner Decorations -->
+                    <div class="hud-corner hud-corner-tl"></div>
+                    <div class="hud-corner hud-corner-tr"></div>
+                    <div class="hud-corner hud-corner-bl"></div>
+                    <div class="hud-corner hud-corner-br"></div>
+                    <!-- Data Stream -->
+                    <div class="data-stream data-stream-left"></div>
+                    <div class="data-stream data-stream-right"></div>
+
+                    <canvas id="heroCanvas"></canvas>
+                    <canvas id="robotArmCanvas"></canvas>
+                    <div class="hero-content">
+                        <div class="avatar-container">
+                            <div class="avatar-glow"></div>
+                            <div class="hal-eye">
+                                <div class="hal-outer-ring"></div>
+                                <div class="hal-inner-ring"></div>
+                                <div class="hal-core">
+                                    <div class="hal-pupil"></div>
+                                    <div class="hal-reflection"></div>
+                                </div>
+                            </div>
+                            <div class="avatar-ring"></div>
+                        </div>
+                        <h1 class="hero-title">
+                            <span class="greeting glitch-text" data-text="你好，这里是">你好，这里是</span>
+                            <span class="name" id="typedName"><span class="cursor-blink">|</span></span>
+                        </h1>
+                        <p class="hero-subtitle cyber-text">分形噪波</p>
+                        <p class="hero-description">
+                            非典型技术美术，热爱探索技术与艺术的交汇点，专注于<span class="highlight">程序化生成</span>、
+                            <span class="highlight">机器人技术</span>和<span class="highlight">AIGC</span>领域。
+                            为这个世界奉献有趣。
+                        </p>
+                        <!-- Status Indicator -->
+                        <div class="status-indicator">
+                            <span class="status-dot"></span>
+                            <span class="status-text">SYSTEM ONLINE</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Skills & Stats -->
+                <div class="about-stats">
+                    <div class="stat-card" data-aos="fade-up">
+                        <div class="stat-icon">🤖</div>
+                        <div class="stat-number" data-count="30">0</div>
+                        <div class="stat-label">项目作品</div>
+                    </div>
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="100">
+                        <div class="stat-icon">💡</div>
+                        <div class="stat-number" data-count="8">0</div>
+                        <div class="stat-label">技术领域</div>
+                    </div>
+                    <div class="stat-card" data-aos="fade-up" data-aos-delay="200">
+                        <div class="stat-icon">⚡</div>
+                        <div class="stat-number" data-count="5">0</div>
+                        <div class="stat-label">年经验</div>
+                    </div>
+                </div>
+
+                <!-- Tech Stack -->
+                <div class="tech-stack">
+                    <h3 class="section-subtitle">技术栈与爱好</h3>
+                    <div class="tech-tags">
+                        <span class="tech-tag" data-category="language">程序化生成</span>
+                        <span class="tech-tag" data-category="language">游戏引擎</span>
+                        <span class="tech-tag" data-category="language">动态设计</span>
+                        <span class="tech-tag" data-category="language">AIGC</span>
+                        <span class="tech-tag" data-category="framework">Houdini</span>
+                        <span class="tech-tag" data-category="framework">Blender</span>
+                        <span class="tech-tag" data-category="framework">AfterEffect</span>
+                        <span class="tech-tag" data-category="framework">Unreal Engine</span>
+                        <span class="tech-tag" data-category="framework">Python</span>
+                        <span class="tech-tag" data-category="robotics">攀岩</span>
+                        <span class="tech-tag" data-category="robotics">3D打印与机器人</span>
+                        <span class="tech-tag" data-category="robotics">桌游</span>
+
+                    </div>
+                </div>
+
+                <!-- Social Links -->
+                <div class="social-section">
+                    <h3 class="section-subtitle">社交媒体</h3>
+                    <div class="social-links">
+                        <a href="https://space.bilibili.com/77365669?spm_id_from=333.788.0.0" target="_blank"
+                            class="social-link" data-platform="bilibili">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M17.813 4.653h.854c1.51.054 2.769.578 3.773 1.574 1.004.995 1.524 2.249 1.56 3.76v7.36c-.036 1.51-.556 2.769-1.56 3.773s-2.262 1.524-3.773 1.56H5.333c-1.51-.036-2.769-.556-3.773-1.56S.036 18.858 0 17.347v-7.36c.036-1.511.556-2.765 1.56-3.76 1.004-.996 2.262-1.52 3.773-1.574h.774l-1.174-1.12a1.234 1.234 0 0 1-.373-.906c0-.356.124-.658.373-.907l.027-.027c.267-.249.573-.373.92-.373.347 0 .653.124.92.373L9.653 4.44c.071.071.134.142.187.213h4.267a.836.836 0 0 1 .16-.213l2.853-2.747c.267-.249.573-.373.92-.373.347 0 .662.151.929.4.267.249.391.551.391.907 0 .355-.124.657-.373.906L17.813 4.653zM5.333 7.24c-.746.018-1.373.276-1.88.773-.506.498-.769 1.13-.786 1.894v7.52c.017.764.28 1.395.786 1.893.507.498 1.134.756 1.88.773h13.334c.746-.017 1.373-.275 1.88-.773.506-.498.769-1.129.786-1.893v-7.52c-.017-.765-.28-1.396-.786-1.894-.507-.497-1.134-.755-1.88-.773zM8 11.107c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c0-.373.129-.689.386-.947.258-.257.574-.386.947-.386zm8 0c.373 0 .684.124.933.373.25.249.383.569.4.96v1.173c-.017.391-.15.711-.4.96-.249.25-.56.374-.933.374s-.684-.125-.933-.374c-.25-.249-.383-.569-.4-.96V12.44c.017-.391.15-.711.4-.96.249-.249.56-.373.933-.373z" />
+                                </svg>
+                            </div>
+                            <span class="social-name">分形噪波</span>
+                        </a>
+                        <a href="https://xhslink.com/m/8bWILjR6SA9" target="_blank" class="social-link"
+                            data-platform="xiaohongshu">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 1024 1024" fill="currentColor">
+                                    <path d=" M922.0096 509.44c8.6016 0.9216 16.384 1.024 24.064 2.4576 31.232 6.144
+                                        49.664 25.9072 50.9952 57.6512 1.3312 31.3344 1.2288 62.5664 0 93.9008a53.4528
+                                        53.4528 0 0 1-43.3152 50.9952 85.4016 85.4016 0 0
+                                        1-46.08-1.2288c-22.9376-7.168-35.328-23.552-39.2192-47.104-0.8192-4.5056
+                                        1.024-5.7344 5.2224-5.632 16.5888 0.2048 33.28 0 49.7664 0H931.84c0.3072-2.048
+                                        0.7168-3.7888
+                                        0.7168-5.3248v-57.6512c-0.2048-13.2096-7.3728-21.2992-20.48-21.504-27.7504-0.3072-55.6032
+                                        0-83.3536 0-0.7168 0-1.2288 0.2048-2.6624 0.512-0.1024 2.6624-0.4096
+                                        5.4272-0.4096 8.192 0 41.3696 0 82.6368 0.2048 124.0064 0 6.8608-2.048
+                                        8.6016-8.6016 8.2944-16.1792-0.4096-32.256-0.1024-48.4352-0.1024-8.3968 0-8.3968
+                                        0-8.3968-8.704V576.512c-2.9696-0.1024-5.12-0.4096-7.5776-0.4096-16.7936
+                                        0-33.5872 0-50.3808 0.2048-5.0176 0-6.8608-1.3312-6.7584-6.7584 0.4096-17.408
+                                        0.3072-34.9184 0-52.4288-0.1024-5.12 1.3312-6.8608 6.5536-6.656 19.1488 0.2048
+                                        37.9904 0.1024 57.6512 0.1024v-53.248c-11.776 0-23.3472-0.4096-34.816
+                                        0.2048-6.4512 0.2048-8.0896-2.048-7.9872-8.192 0.4096-18.7392 0.2048-37.5808
+                                        0.2048-57.344h43.008c0-6.144 0.2048-11.264 0-16.384 0-3.7888 1.024-5.5296
+                                        5.12-5.5296 18.432 0.2048 36.864 0.2048 55.0912 0 4.096 0 5.4272 1.7408 5.3248
+                                        5.5296-0.2048 3.584 0.2048 6.9632-0.2048 10.5472-0.3072 4.7104 1.7408 5.632
+                                        6.144 5.9392 12.3904 0.6144 25.1904 0.3072 37.1712 3.3792 33.4848 8.192 52.4288
+                                        33.0752 53.248 67.584 0.2048 13.312 0 26.624 0 39.936v6.5536z m-96.4608
+                                        0.4096h32.4608c0-15.0528 0.2048-29.3888
+                                        0-43.8272-0.2048-4.9152-3.3792-8.3968-8.3968-8.6016-7.9872-0.4096-15.9744-0.2048-24.1664-0.2048l0.1024
+                                        52.6336zM469.7088 716.1856l14.336-28.8768c5.12-10.1376 10.4448-20.2752
+                                        15.36-30.5152 1.8432-4.096 4.1984-5.632 9.0112-5.632 16.7936 0.3072 33.5872
+                                        0.1024 50.5856 0.1024h7.9872v-7.5776c0-59.8016-0.1024-119.5008 0.1024-179.2
+                                        0-6.3488-1.9456-7.7824-7.8848-7.5776-9.9328 0.4096-20.0704 0.2048-30.208
+                                        0.2048-2.8672 0-5.12-0.4096-5.12-4.1984v-61.0304c3.072-0.1024 5.632-0.512
+                                        8.192-0.512 44.9536 0 89.8048 0.1024 134.656-0.1024 6.656 0 8.4992 2.048 8.3968
+                                        8.4992-0.4096 16.7936-0.3072 33.6896 0 50.5856 0.1024 5.12-1.4336 6.9632-6.656
+                                        6.7584-11.8784-0.4096-23.552-0.2048-35.84-0.2048v193.8432c2.048 0.1024 4.3008
+                                        0.4096 6.656 0.4096h51.2c4.5056 0 6.144 1.2288 6.144 5.9392-0.2048 18.1248 0
+                                        36.2496 0 54.4768 0 3.7888-1.024 5.4272-5.12 5.4272L473.7024 716.8c-1.2288
+                                        0-2.048-0.3072-3.9936-0.7168z m-364.4416-54.5792h42.1888v-8.192c0-91.9552
+                                        0.1024-183.9104-0.1024-275.7632 0-6.144 1.3312-8.192 7.8848-8.192 17.1008 0.6144
+                                        34.0992 0.3072 51.2 0.2048 4.7104-0.2048 6.4512 1.1264 6.4512 6.144l-0.2048
+                                        284.8768c0 5.632-1.024 11.4688-2.56 16.7936-7.5776 28.16-29.9008 42.5984-59.8016
+                                        38.912a51.6096 51.6096 0 0 1-45.6704-51.6096l0.6144-3.1744z" p-id="1703">
+                                    </path>
+                                    <path
+                                        d="M416.5632 521.6256c-10.1376 0-19.0464 0.3072-27.9552 0a65.8432 65.8432 0 0 1-16.896-2.4576c-12.3904-3.7888-18.1248-14.2336-13.9264-26.8288 3.8912-11.264 8.6016-22.528 13.824-33.1776 13.7216-28.16 27.648-56.0128 41.7792-83.968 1.024-2.2528 3.6864-5.12 5.632-5.12 20.1728-0.4096 40.2432-0.3072 61.44-0.3072l-2.9696 6.9632-38.6048 77.5168c-3.584 7.168-2.6624 9.5232 4.096 11.8784 0.4096-0.3072 0.9216-0.4096 1.024-0.7168 2.56-8.6016 8.704-9.5232 16.6912-9.216 17.2032 0.4096 34.4064 0 53.1456 0l-3.584 7.68c-16.0768 32.0512-32.0512 64.1024-47.9232 96.256-5.8368 11.4688-3.4816 15.1552 9.728 15.36h25.7024l-3.3792 7.3728c-7.3728 14.5408-14.6432 28.9792-22.1184 43.3152a7.7824 7.7824 0 0 1-5.7344 3.6864c-20.48 0.2048-40.7552 0.512-61.0304 0-22.016-0.6144-31.1296-14.1312-23.7568-34.816a150.528 150.528 0 0 1 5.2224-12.6976l21.1968-43.6224 8.3968-17.1008z m-311.5008-65.2288l-3.8912 48.7424c-2.3552 28.7744-4.096 57.5488-7.5776 86.2208-3.7888 31.744-13.5168 61.8496-32.3584 88.2688a88.8832 88.8832 0 0 1-5.632 7.168c-1.1264-1.7408-2.3552-3.072-3.072-4.5056-10.5472-20.7872-21.4016-41.5744-31.8464-62.464-1.024-1.9456-2.048-4.8128-1.2288-6.5536 6.144-12.6976 6.9632-26.5216 7.9872-40.1408 2.9696-36.1472 5.9392-72.2944 8.4992-108.544 0.3072-6.3488 2.1504-8.6016 8.9088-8.2944 19.6608 0.512 39.424 0.1024 60.2112 0.1024z m197.4272 231.0144c-4.096-6.144-7.68-10.9568-10.752-16.1792a222.0032 222.0032 0 0 1-27.3408-95.6416L256 461.7216v-5.3248h14.4384c14.848 0 29.696 0.1024 44.6464-0.1024 4.096 0 5.632 1.1264 6.144 5.4272 2.9696 41.472 5.8368 82.944 9.4208 124.3136 0.6144 8.4992 3.8912 16.384 5.7344 24.7808 0.512 2.3552 1.3312 5.3248 0.4096 7.2704l-34.2016 69.3248z m34.0992 25.7024l6.9632-13.824c8.3968-16.384 16.896-32.5632 25.088-49.0496 1.8432-3.4816 3.6864-4.096 7.5776-3.4816 10.0352 1.8432 20.2752 3.6864 30.4128 4.096 18.432 0.6144 37.1712 0.2048 55.7056 0.2048h7.9872c-0.9216 2.4576-1.1264 4.096-2.048 5.5296-9.216 18.2272-18.8416 36.352-28.0576 54.784-2.048 4.1984-4.608 5.5296-9.216 5.5296-23.3472-0.1024-46.6944 0.2048-70.144-0.3072-7.5776 0-15.4624-2.1504-24.2688-3.4816z m615.424-256.512h-14.4384c-4.096 0.2048-5.4272-1.4336-5.3248-5.4272 0.2048-9.4208-0.2048-18.7392 0.2048-28.2624a32.6656 32.6656 0 0 1 65.1264 0.8192 32.768 32.768 0 0 1-32.5632 32.768c-4.3008 0.2048-8.704 0-13.0048 0z" />
+                                </svg>
+                            </div>
+                            <span class=" social-name">沐心</span>
+                        </a>
+                        <a href="https://weibo.com/n/%E5%88%86%E5%BD%A2_%E5%99%AA%E6%B3%A2" target="_blank"
+                            class="social-link" data-platform="weibo">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M10.098 20.323c-3.977.391-7.414-1.406-7.672-4.02-.259-2.609 2.759-5.047 6.74-5.441 3.979-.394 7.413 1.404 7.671 4.018.259 2.6-2.759 5.049-6.737 5.439l-.002.004zM9.05 17.219c-.384.616-1.208.884-1.829.602-.612-.279-.793-.991-.406-1.593.379-.595 1.176-.861 1.793-.601.622.263.82.972.442 1.592zm1.27-1.627c-.141.237-.449.353-.689.253-.236-.09-.313-.361-.177-.586.138-.227.436-.346.672-.24.239.09.315.36.18.573h.014zm.176-2.719c-1.893-.493-4.033.45-4.857 2.118-.836 1.704-.026 3.591 1.886 4.21 1.983.64 4.318-.341 5.132-2.179.8-1.793-.201-3.642-2.161-4.149zm7.563-1.224c-.346-.105-.579-.18-.4-.646.388-.993.428-1.848.003-2.457-.793-1.136-2.96-1.075-5.455-.03 0 0-.782.343-.582-.277.382-1.218.324-2.24-.27-2.836-1.349-1.349-4.932.05-8.004 3.123C1.38 10.551 0 12.645 0 14.378c0 3.32 4.257 5.339 8.423 5.339 5.463 0 9.095-3.172 9.095-5.693 0-1.522-1.283-2.384-2.461-2.725h.002zm1.609-7.629c-.357-.388-1.058-.107-1.069.445l-.002.072c.014.424-.032.858-.16 1.296-.162.543-.433 1.163-.813 1.862l-.018.036a.63.63 0 00.104.728c.201.219.543.225.753.012l.016-.016c1.076-1.102 1.644-2.555 1.607-3.985a.97.97 0 00-.418-.45zm1.877-1.964c-1.09-1.236-2.697-1.969-4.381-2.002a.718.718 0 00-.717.783c.02.368.319.65.687.669 1.347.025 2.627.616 3.512 1.619.777.88 1.204 1.997 1.232 3.209a.716.716 0 00.732.695c.396-.01.71-.337.701-.732a6.224 6.224 0 00-1.766-4.241z" />
+                                </svg>
+                            </div>
+                            <span class="social-name">分形_噪波</span>
+                        </a>
+                        <a href="#" class="social-link" data-platform="email"
+                            onclick="const email = 'muxinmx98@163.com'; navigator.clipboard.writeText(email).then(() => { this.querySelector('.social-name').innerText = '已复制!'; setTimeout(() => { this.querySelector('.social-name').innerText = email; }, 1500); }).catch(err => { console.error('复制失败: ', err); this.querySelector('.social-name').innerText = email; }); return false;">
+                            <div class="social-icon">
+                                <svg viewBox="0 0 24 24" fill="currentColor">
+                                    <path
+                                        d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z" />
+                                </svg>
+                            </div>
+                            <span class="social-name">邮箱</span>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Section 2: Vibe Coding -->
+        <section id="vibe-coding" class="section section-vibe-coding">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">⚡</span>
+                    Vibe Coding
+                </h2>
+                <p class="section-desc">AI驱动的创意编程项目 · 实时可视化与交互体验</p>
+            </div>
+            <div class="projects-grid vibe-coding-grid" id="vibeCodingGrid">
+                <!-- Vibe Coding projects will be injected here -->
+            </div>
+        </section>
+
+        <!-- Section 3: Other Projects -->
+        <section id="projects" class="section section-projects">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">🎨</span>
+                    作品与教程
+                </h2>
+                <p class="section-desc">探索与创造 · 涵盖多个技术领域</p>
+            </div>
+
+            <!-- Category Filter -->
+            <div class="category-filter">
+                <button class="filter-btn active" data-category="all">全部</button>
+                <button class="filter-btn" data-category="3d-robotics">3D打印与机器人</button>
+                <button class="filter-btn" data-category="aigc">AIGC</button>
+                <button class="filter-btn" data-category="engine-3d">引擎、3D与其他</button>
+                <button class="filter-btn" data-category="procedural">程序化生成</button>
+            </div>
+
+            <div class="projects-grid portfolio-grid" id="portfolioGrid">
+                <!-- Portfolio projects will be injected here -->
+            </div>
+        </section>
+
+        <!-- Section 4: Tech Blog -->
+        <section id="tech-blog" class="section section-tech-blog">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <span class="title-icon">📝</span>
+                    技术分享与学习笔记
+                </h2>
+                <p class="section-desc">技术分享与学习笔记</p>
+            </div>
+            <div class="blog-grid" id="blogGrid">
+                <!-- Blog entries will be injected here -->
+            </div>
+        </section>
+    </main>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="footer-content">
+            <span class="footer-text">© 2024 Portfolio</span>
+            <span class="divider">·</span>
+            <span class="footer-text">Powered by <span class="accent">Creative Coding</span> & AI</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+</body>
+
+</html>
