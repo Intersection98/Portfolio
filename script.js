@@ -324,13 +324,20 @@ const portfolioProjects = [
 const blogEntries = [
     {
         id: 'b1',
+        title: '如何把vibe coding的网站部署上线',
+        description: '极简网站部署上线教程',
+        icon: '💻',
+        url: 'https://ai.feishu.cn/wiki/Wtn7wPMjLifV6Zk8PkJcxFqunib?from=from_copylink'
+    },
+    {
+        id: 'b2',
         title: '3d打印与机器人',
         description: ' 3D打印与机器人技术的探索记录，机械臂，步行机器人与AI智能体',
         icon: '🤖',
         url: 'https://ai.feishu.cn/docx/PgwSdl7Nqoq2ZExaLa5cKqTInKg?from=from_copylink'
     },
     {
-        id: 'b2',
+        id: 'b10',
         title: 'Vibe Coding Daily',
         description: '从算法可视化到生成艺术，记录Vibe Coding过程中的灵感与技术心得。',
         icon: '⚡',
