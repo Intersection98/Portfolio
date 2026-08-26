@@ -13,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initHeroCanvas();
     initRobotArm();
     initTypingEffect();
-    initCounterAnimation();
     loadVibeCodingProjects();
     loadPortfolioProjects();
     loadBlogEntries();
@@ -642,19 +641,15 @@ function initCustomCursor() {
     if (!cursor || !follower) return;
 
     let mouseX = 0, mouseY = 0;
-    let cursorX = 0, cursorY = 0;
     let followerX = 0, followerY = 0;
 
     document.addEventListener('mousemove', (e) => {
         mouseX = e.clientX;
         mouseY = e.clientY;
+        cursor.style.transform = `translate(${mouseX}px, ${mouseY}px)`;
     }, { passive: true });
 
     function animate() {
-        cursorX += (mouseX - cursorX) * 0.5;
-        cursorY += (mouseY - cursorY) * 0.5;
-        cursor.style.transform = `translate(${cursorX}px, ${cursorY}px)`;
-
         followerX += (mouseX - followerX) * 0.15;
         followerY += (mouseY - followerY) * 0.15;
         follower.style.transform = `translate(${followerX}px, ${followerY}px)`;
@@ -1360,11 +1355,11 @@ function createProjectCard(project, index, showCategory = false) {
     let bilibiliLink = '';
 
     if (project.iframeSrc) {
-        // Load iframe with autoplay and high quality
+        // Load the embedded player without automatic playback.
         const baseUrl = project.iframeSrc;
         const separator = baseUrl.includes('?') ? '&' : '?';
-        // Add high_quality=1 for better resolution
-        const playerUrl = `${baseUrl}${separator}autoplay=1&danmaku=0&poster=0&high_quality=1&quality=80`;
+        // Do not start every embedded player at once when a section opens.
+        const playerUrl = `${baseUrl}${separator}autoplay=0&muted=1&danmaku=0&poster=0&high_quality=1&quality=80`;
 
         // Extract bvid from URL to create Bilibili link
         const bvidMatch = baseUrl.match(/bvid=([^&]+)/);
@@ -1388,6 +1383,10 @@ function createProjectCard(project, index, showCategory = false) {
             </svg>
         </a>` : '';
 
+    const videoOverlay = bilibiliLink ?
+        `<a href="${bilibiliLink}" target="_blank" rel="noopener noreferrer" class="video-click-overlay"
+            aria-label="在B站观看 ${project.title}"></a>` : '';
+
     // Card info content
     const cardInfoContent = `
         ${project.date ? `<div class="card-meta"><span class="card-date">${project.date}</span></div>` : ''}
@@ -1401,6 +1400,7 @@ function createProjectCard(project, index, showCategory = false) {
     card.innerHTML = `
         <div class="card-video-wrapper">
             ${mediaContent}
+            ${videoOverlay}
             <div class="play-overlay"></div>
             ${categoryBadge}
             ${bilibiliButton}
