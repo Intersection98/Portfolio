@@ -367,6 +367,66 @@ img {
 :root[data-theme="light"] .theme-toggle .sun { transform: none; }
 :root[data-theme="light"] .theme-toggle .moon { transform: translateY(-120%); }
 
+.sound-toggle {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex: 0 0 38px;
+    width: 38px;
+    height: 38px;
+    border: var(--bw) solid var(--edge);
+    border-radius: 50%;
+    background: var(--surface);
+    color: var(--acid);
+    transition: color .18s, background .18s;
+}
+
+.sound-toggle svg {
+    width: 24px;
+    height: 24px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.sound-off { opacity: 0; transition: opacity .18s; }
+.sound-toggle[aria-pressed="false"] { color: var(--muted); }
+.sound-toggle[aria-pressed="false"] .sound-off { opacity: 1; }
+.sound-toggle[aria-pressed="false"] .sound-bars { opacity: 0; }
+
+.sound-bars {
+    position: absolute;
+    left: 20px;
+    top: 12px;
+    height: 10px;
+    display: flex;
+    align-items: center;
+    gap: 2px;
+    transition: opacity .18s;
+}
+
+.sound-bars i {
+    display: block;
+    width: 2px;
+    height: 6px;
+    border-radius: 1px;
+    background: currentColor;
+}
+
+.sound-bars i:nth-child(2) { height: 10px; }
+.sound-bars i:nth-child(3) { height: 4px; }
+.sound-toggle.sounding .sound-bars i { animation: soundMeter .32s ease-in-out 2 alternate; }
+.sound-toggle.sounding .sound-bars i:nth-child(2) { animation-delay: -.12s; }
+.sound-toggle.sounding .sound-bars i:nth-child(3) { animation-delay: -.2s; }
+
+@keyframes soundMeter {
+    0%, 100% { transform: scaleY(.4); }
+    50% { transform: scaleY(1); }
+}
+
 /* ============ Buttons & chips ============ */
 .btn {
     display: inline-flex;
@@ -1207,12 +1267,6 @@ img {
     box-shadow: 8px 8px 0 var(--accent);
 }
 
-.video-card.enter { animation: cardIn .5s var(--ease) both; }
-
-@keyframes cardIn {
-    from { opacity: 0; transform: translateY(24px) scale(.96); }
-}
-
 .video-cover {
     position: relative;
     aspect-ratio: 16 / 9;
@@ -1528,9 +1582,15 @@ img {
     place-items: center;
     padding: 16px;
     visibility: hidden;
+    pointer-events: none;
+    transition: visibility 0s .22s;
 }
 
-.modal.open { visibility: visible; }
+.modal.open {
+    visibility: visible;
+    pointer-events: auto;
+    transition-delay: 0s;
+}
 
 .modal-backdrop {
     position: absolute;
@@ -1600,6 +1660,67 @@ img {
 .modal-info h3 { font-size: 20px; line-height: 1.35; }
 .modal-info p { font-size: 14px; color: var(--muted); }
 .modal-info .btn { height: 44px; flex-shrink: 0; }
+
+/* ============ Tactile feedback ============ */
+:where(.feedback-surface) { position: relative; }
+.feedback-surface.ui-pressed { scale: .975; }
+
+.ui-ping {
+    position: absolute;
+    inset: 2px;
+    z-index: 6;
+    border: 2px solid currentColor;
+    border-radius: inherit;
+    pointer-events: none;
+}
+
+.game-card > .ui-ping,
+.video-card > .ui-ping { border-color: var(--accent); }
+
+.nav a:is(:hover, :focus-visible) .nav-dot { transform: rotate(135deg); }
+
+.game-card:focus-within {
+    --lift: -6px;
+    box-shadow: 10px 12px 0 var(--accent);
+}
+
+.video-card:focus-visible {
+    transform: translate(-3px, -4px) rotate(-.4deg);
+    box-shadow: 8px 8px 0 var(--accent);
+}
+
+.video-card:focus-visible .play-btn { transform: scale(1.1) rotate(-2deg); }
+.video-card:focus-visible .video-cover img { transform: scale(1.07); }
+.tags span { transition: transform .22s var(--ease); }
+.social-plat { transition: transform .22s var(--ease), background .2s, color .2s; }
+.stat dt { transform-origin: left bottom; transition: transform .24s var(--spring); }
+.footer a { position: relative; display: inline-flex; transition: transform .2s var(--ease), color .2s; }
+
+.social-link:is(:focus-visible, .copied) {
+    background: var(--c);
+    color: #0c0b12;
+    box-shadow: 8px 8px 0 var(--shadow);
+}
+
+.social-link:is(:focus-visible, .copied) .social-plat { background: #0c0b12; color: var(--c); }
+.social-link.copied .social-plat { transform: rotate(-3deg); }
+
+.note a:focus-visible { color: var(--on-accent); }
+.note a:focus-visible::before { transform: scaleY(1); }
+.note a:focus-visible :is(.note-no, .note-desc, .note-host) { color: var(--on-accent); }
+.note a:focus-visible .note-icon { transform: rotate(-12deg) scale(1.1); }
+.note a:focus-visible .note-arrow { transform: rotate(-45deg); }
+
+@media (hover: hover) and (pointer: fine) {
+    .sound-toggle:hover { background: var(--acid); color: var(--on-accent); }
+    .chip:hover { transform: translateY(-2px); }
+    .video-card:hover .tags span { transform: translateY(-2px); }
+    .video-card:hover .tags span:nth-child(2) { transition-delay: .035s; }
+    .video-card:hover .tags span:nth-child(3) { transition-delay: .07s; }
+    .social-link:hover .social-plat { transform: translateY(-3px) rotate(-2deg); }
+    .stat:hover dt { transform: translateY(-3px) rotate(-4deg); }
+    .footer a:hover { transform: translateY(-3px); }
+}
 
 /* ============ Reveal ============ */
 .reveal {
@@ -1687,6 +1808,10 @@ img {
     .modal-info { flex-direction: column; align-items: flex-start; }
     .footer { flex-direction: column; }
     .logo-text { font-size: 17px; }
+    .header { gap: 10px; }
+    .header-actions { gap: 6px; }
+    .btn-random { width: 38px; padding: 0; justify-content: center; }
+    .sound-toggle, .theme-toggle { flex-shrink: 0; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -1697,4 +1822,8 @@ img {
     }
     html { scroll-behavior: auto; }
     .reveal { opacity: 1; transform: none; }
+    .feedback-surface.ui-pressed { scale: 1; }
+    .ui-ping { display: none; }
+    .stat:hover dt, .video-card:hover .tags span, .social-link:hover .social-plat,
+    .chip:hover, .footer a:hover { transform: none; }
 }

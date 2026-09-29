@@ -574,7 +574,7 @@ const covers = {
 
 const categories = [
     { key: 'game-design', label: '游戏', accent: 'var(--acid)' },
-    { key: 'fractal-lab', label: '分形噪波实验', accent: 'var(--sun)' },
+    { key: 'fractal-lab', label: '分形噪波实验室', accent: 'var(--sun)' },
     { key: '3d-robotics', label: '3D打印与机器人', accent: 'var(--cyan)' },
     { key: 'aigc', label: 'AIGC', accent: 'var(--pink)' },
     { key: 'engine-3d', label: '引擎、3D与其他', accent: 'var(--violet)' },
@@ -2034,43 +2034,33 @@ function renderGames() {
 
 function initGameFilter() {
     const chips = $$('#gameFilter .chip');
+    chips.forEach(chip => chip.setAttribute('aria-pressed', String(chip.classList.contains('active'))));
     chips.forEach(chip => chip.addEventListener('click', () => {
-        chips.forEach(c => c.classList.toggle('active', c === chip));
+        if (chip.classList.contains('active')) return;
+        chips.forEach(c => {
+            c.classList.toggle('active', c === chip);
+            c.setAttribute('aria-pressed', String(c === chip));
+        });
         const genre = chip.dataset.genre;
-        $$('.game-card').forEach(card => {
-            const show = genre === 'all' || card.dataset.genre.split(/\s+/).includes(genre);
-            card.classList.toggle('hidden', !show);
-            // the featured layout only makes sense with the full lineup
-            card.classList.toggle(
-                'featured',
-                Boolean(show && genre === 'all' && games[+card.dataset.index].featured)
-            );
+        UIFeedback.transitionCards($('#gameGrid'), () => {
+            $$('.game-card').forEach(card => {
+                const show = genre === 'all' || card.dataset.genre.split(/\s+/).includes(genre);
+                card.classList.toggle('hidden', !show);
+                // the featured layout only makes sense with the full lineup
+                card.classList.toggle(
+                    'featured',
+                    Boolean(show && genre === 'all' && games[+card.dataset.index].featured)
+                );
+            });
         });
     }));
 }
 
-let arcadeAudioContext;
 let rollFollowFrame = 0;
 let rollFollowTarget = 0;
 
 function playArcadeTone(frequency, duration, delay = 0, volume = .025, type = 'square') {
-    const AudioContext = window.AudioContext;
-    if (!AudioContext) return;
-    arcadeAudioContext ||= new AudioContext();
-    if (arcadeAudioContext.state === 'suspended') arcadeAudioContext.resume().catch(() => {});
-
-    const start = arcadeAudioContext.currentTime + delay;
-    const oscillator = arcadeAudioContext.createOscillator();
-    const gain = arcadeAudioContext.createGain();
-    oscillator.type = type;
-    oscillator.frequency.setValueAtTime(frequency, start);
-    gain.gain.setValueAtTime(.0001, start);
-    gain.gain.exponentialRampToValueAtTime(volume, start + .006);
-    gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
-    oscillator.connect(gain);
-    gain.connect(arcadeAudioContext.destination);
-    oscillator.start(start);
-    oscillator.stop(start + duration + .01);
+    UIFeedback.tone(frequency, duration, delay, volume, type);
 }
 
 function playRollTick(progress) {
@@ -2191,6 +2181,9 @@ function initCabinet() {
         screen.classList.remove('switching');
         void screen.offsetWidth;
         screen.classList.add('switching');
+        UIFeedback.animate($('.cabinet-info'), [
+            { opacity: .4, translate: '0 6px' }, { opacity: 1, translate: '0 0' }
+        ], { duration: 260 });
     }
 
     function schedule() {
@@ -2251,7 +2244,12 @@ function renderVibe() {
     $$('[data-rail]').forEach(btn => btn.addEventListener('click', () => {
         const card = $('.video-card', rail);
         const step = card ? card.getBoundingClientRect().width + 20 : 300;
-        rail.scrollBy({ left: step * +btn.dataset.rail, behavior: 'smooth' });
+        const direction = +btn.dataset.rail;
+        const atEdge = direction < 0 ? rail.scrollLeft <= 1
+            : rail.scrollLeft >= rail.scrollWidth - rail.clientWidth - 1;
+        UIFeedback.sound(atEdge ? 'limit' : 'step');
+        if (atEdge) UIFeedback.nudge(btn, direction);
+        rail.scrollBy({ left: step * direction, behavior: REDUCED ? 'instant' : 'smooth' });
     }));
 
     // drag to scroll with the mouse
@@ -2289,22 +2287,20 @@ function renderWorks() {
     filter.innerHTML = `<button class="chip active" data-cat="all">全部<span class="count">${portfolioProjects.length}</span></button>` +
         categories.filter(c => counts[c.key]).map(c =>
             `<button class="chip" data-cat="${c.key}">${c.label}<span class="count">${counts[c.key]}</span></button>`).join('');
+    $$('.chip', filter).forEach(chip => chip.setAttribute('aria-pressed', String(chip.classList.contains('active'))));
 
     filter.addEventListener('click', e => {
         const chip = e.target.closest('.chip');
-        if (!chip) return;
-        $$('.chip', filter).forEach(c => c.classList.toggle('active', c === chip));
+        if (!chip || chip.classList.contains('active')) return;
+        $$('.chip', filter).forEach(c => {
+            c.classList.toggle('active', c === chip);
+            c.setAttribute('aria-pressed', String(c === chip));
+        });
         const cat = chip.dataset.cat;
-        let n = 0;
-        $$('.video-card', grid).forEach(card => {
-            const show = cat === 'all' || card.dataset.category === cat;
-            card.style.display = show ? '' : 'none';
-            card.classList.remove('enter');
-            if (show && !REDUCED) {
-                card.style.animationDelay = `${Math.min(n++, 12) * .04}s`;
-                void card.offsetWidth;
-                card.classList.add('enter');
-            }
+        UIFeedback.transitionCards(grid, () => {
+            $$('.video-card', grid).forEach(card => {
+                card.style.display = cat === 'all' || card.dataset.category === cat ? '' : 'none';
+            });
         });
     });
 }
@@ -2350,13 +2346,16 @@ function initModal() {
         modal.classList.add('open');
         document.body.style.overflow = 'hidden';
         $('.modal-close', modal).focus();
+        UIFeedback.sound('open');
     }
 
     function close() {
+        if (!modal.classList.contains('open')) return;
         modal.classList.remove('open');
         document.body.style.overflow = '';
         iframe.src = 'about:blank';
         if (lastFocus) lastFocus.focus({ preventScroll: true });
+        UIFeedback.sound('close');
     }
 
     document.addEventListener('click', e => {
@@ -2469,8 +2468,19 @@ function initCopyEmail() {
         const email = btn.dataset.email;
         try {
             await navigator.clipboard.writeText(email);
+            const label = $('.social-plat', btn);
+            label.textContent = 'COPIED ✓';
+            btn.classList.add('copied');
+            UIFeedback.sound('success');
+            UIFeedback.pulse(btn);
+            clearTimeout(btn._copyTimer);
+            btn._copyTimer = setTimeout(() => {
+                label.textContent = 'EMAIL';
+                btn.classList.remove('copied');
+            }, 2400);
             toast(`已复制 ${email}`);
         } catch (e) {
+            UIFeedback.sound('launch');
             window.location.href = `mailto:${email}`;
         }
     });
@@ -2496,5 +2506,6 @@ document.addEventListener('DOMContentLoaded', () => {
     initMagnetic();
     initScroll();
     initCopyEmail();
+    UIFeedback.init();
     startSceneLoop();
 });
