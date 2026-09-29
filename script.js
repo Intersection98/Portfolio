@@ -1284,7 +1284,7 @@ function initTypingEffect() {
     const element = document.getElementById('typedName');
     if (!element) return;
 
-    const names = ['技术美术', '动态设计师', 'AIGC探险家'];
+    const names = ['技术美术', '动态设计师', '独立游戏设计师','AIGC探险家'];
     let nameIndex = 0;
     let charIndex = 0;
     let isDeleting = false;
