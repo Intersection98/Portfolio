@@ -87,6 +87,10 @@ html {
     -webkit-text-size-adjust: 100%;
 }
 
+html.roll-following {
+    scroll-behavior: auto;
+}
+
 body {
     background: var(--bg);
     color: var(--ink);

@@ -2049,31 +2049,101 @@ function initGameFilter() {
     }));
 }
 
+let arcadeAudioContext;
+let rollFollowFrame = 0;
+let rollFollowTarget = 0;
+
+function playArcadeTone(frequency, duration, delay = 0, volume = .025, type = 'square') {
+    const AudioContext = window.AudioContext;
+    if (!AudioContext) return;
+    arcadeAudioContext ||= new AudioContext();
+    if (arcadeAudioContext.state === 'suspended') arcadeAudioContext.resume().catch(() => {});
+
+    const start = arcadeAudioContext.currentTime + delay;
+    const oscillator = arcadeAudioContext.createOscillator();
+    const gain = arcadeAudioContext.createGain();
+    oscillator.type = type;
+    oscillator.frequency.setValueAtTime(frequency, start);
+    gain.gain.setValueAtTime(.0001, start);
+    gain.gain.exponentialRampToValueAtTime(volume, start + .006);
+    gain.gain.exponentialRampToValueAtTime(.0001, start + duration);
+    oscillator.connect(gain);
+    gain.connect(arcadeAudioContext.destination);
+    oscillator.start(start);
+    oscillator.stop(start + duration + .01);
+}
+
+function playRollTick(progress) {
+    playArcadeTone(190 + progress * 270, .045, 0, .018);
+}
+
+function playRollConfirm() {
+    [523, 659, 784].forEach((frequency, i) => {
+        playArcadeTone(frequency, .16, i * .075, .032, 'triangle');
+    });
+}
+
+function followRollingCard(card) {
+    const rect = card.getBoundingClientRect();
+    const headerSpace = parseFloat(getComputedStyle(document.documentElement).getPropertyValue('--header-h')) + 24;
+    const viewportBottom = innerHeight - 24;
+    const available = Math.max(1, viewportBottom - headerSpace);
+    const desiredTop = rect.height >= available
+        ? headerSpace
+        : headerSpace + (available - rect.height) / 2;
+    const maxScroll = Math.max(0, document.documentElement.scrollHeight - innerHeight);
+    rollFollowTarget = Math.max(0, Math.min(maxScroll, scrollY + rect.top - desiredTop));
+
+    if (REDUCED) {
+        scrollTo({ top: rollFollowTarget, behavior: 'auto' });
+        return;
+    }
+    if (rollFollowFrame) return;
+
+    function follow() {
+        const maxScroll = Math.max(0, document.documentElement.scrollHeight - innerHeight);
+        rollFollowTarget = Math.min(rollFollowTarget, maxScroll);
+        const distance = rollFollowTarget - scrollY;
+        if (Math.abs(distance) < 2.5 || (scrollY >= maxScroll - 1 && distance > 0)) {
+            document.documentElement.scrollTop = Math.round(rollFollowTarget);
+            rollFollowFrame = 0;
+            if (!rollRandomGame.busy) document.documentElement.classList.remove('roll-following');
+            return;
+        }
+        document.documentElement.scrollTop = scrollY + distance * .22;
+        rollFollowFrame = requestAnimationFrame(follow);
+    }
+    rollFollowFrame = requestAnimationFrame(follow);
+}
+
 function rollRandomGame() {
     const cards = $$('.game-card:not(.hidden)');
     if (!cards.length || rollRandomGame.busy) return;
     rollRandomGame.busy = true;
+    if (!REDUCED) document.documentElement.classList.add('roll-following');
     $$('.game-card.chosen').forEach(c => c.classList.remove('chosen'));
     const pick = Math.floor(Math.random() * cards.length);
     const steps = cards.length * 2 + pick;
     let i = 0;
-    $('#arcade').scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'start' });
 
     (function hop() {
         cards.forEach(c => c.classList.remove('rolling'));
         const card = cards[i % cards.length];
         if (i >= steps) {
             card.classList.add('chosen');
+            followRollingCard(card);
+            playRollConfirm();
             const g = games[+card.dataset.index];
             const play = $('.game-play', card);
             play.textContent = '就它了 ↗';
             setTimeout(() => { play.textContent = `${g.cta} ↗`; }, 3500);
-            card.scrollIntoView({ behavior: REDUCED ? 'auto' : 'smooth', block: 'center' });
             toast(`🎲 命运之选：${g.title} —— 点卡片开玩`);
             rollRandomGame.busy = false;
             return;
         }
         card.classList.add('rolling');
+        followRollingCard(card);
+        if (!REDUCED) playRollTick(i / steps);
         i++;
         // decelerate like a slot machine
         setTimeout(hop, REDUCED ? 0 : 60 + Math.pow(i / steps, 3) * 320);
