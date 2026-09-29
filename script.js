@@ -104,6 +104,61 @@ const vibeCodingProjects = [
 
 // Portfolio Projects - 从文件名解析时间
 const portfolioProjects = [
+    // 游戏设计与开发
+    {
+        id: 'p11',
+        title: '双人棋类游戏必胜的秘密',
+        description: '从博弈论、图论与状态空间出发，探索双人抽象棋中必胜策略的逻辑。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117335771847311&bvid=BV1ZAh96ZESq&cid=42260302380&p=1',
+        tags: ['Game Theory', 'Math', 'Interactive'],
+        category: 'fractal-lab',
+        date: '2026-09-26'
+    },
+    {
+        id: 'p12',
+        title: '让 Jev 实时生成无限关卡',
+        description: '根据玩家行为与死亡原因，实时拼接关卡、陷阱并控制怪物行为的横版过关实验。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117314682884196&bvid=BV1EnhE68EqT&cid=42112254013&p=1',
+        tags: ['Jev', 'Procedural', 'Platformer'],
+        category: 'game-design',
+        date: '2026-09-22'
+    },
+    {
+        id: 'p13',
+        title: '谁是挪车王',
+        description: '把买量广告中的挪车玩法做成包含隧道、转盘和门闸机制的四十八关逻辑游戏。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117303190492276&bvid=BV13Bez6JEJV&cid=42056418344&p=1',
+        tags: ['Game Design', 'Logic Puzzle', 'BilibiliToy'],
+        category: 'game-design',
+        date: '2026-09-20'
+    },
+    {
+        id: 'p14',
+        title: '绝岭破局',
+        description: '四款原创极简双人策略棋，以及总能给出全局最优解的电脑对手。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117290842529368&bvid=BV1yHe16sEtu&cid=41995733830&p=1',
+        tags: ['Abstract Game', 'Game AI', 'BilibiliToy'],
+        category: 'game-design',
+        date: '2026-09-18'
+    },
+    {
+        id: 'p15',
+        title: '爆袋旅团 开发日志 01',
+        description: '一款围绕风险抉择展开的盲抽袋构筑 Roguelike 游戏开发记录。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117275306891314&bvid=BV1zaep6JEt3&cid=41921743845&p=1',
+        tags: ['Roguelike', 'Bag-Building', 'BilibiliToy'],
+        category: 'game-design',
+        date: '2026-09-15'
+    },
+    {
+        id: 'p16',
+        title: '猫猫连线解谜小游戏',
+        description: '包含数连、数回、数桥与珍珠等十二种经典机制，由浅入深组成一百道连线谜题。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117239672084111&bvid=BV1LvYW6VEFS&cid=41719563653&p=1',
+        tags: ['Puzzle', '100 Levels', 'BilibiliToy'],
+        category: 'game-design',
+        date: '2026-09-09'
+    },
     // 3D打印与机器人
     {
         id: 'p1',
@@ -321,6 +376,13 @@ const portfolioProjects = [
 
 // Blog/Tech Articles
 const blogEntries = [
+    {
+        id: 'b11',
+        title: '分形噪波的独立游戏开发日志',
+        description: '记录独立游戏从概念、规则设计、AI 对手到可玩版本的持续开发过程。',
+        icon: '🎮',
+        url: 'https://my.feishu.cn/wiki/I1bAwq0GziLEiek4jJDcM2UCnog'
+    },
     {
         id: 'b1',
         title: '如何把vibe coding的网站部署上线',
@@ -1426,6 +1488,8 @@ function getCategoryLabel(category) {
     const labels = {
         '3d-robotics': '3D打印与机器人',
         'aigc': 'AIGC',
+        'game-design': '游戏',
+        'fractal-lab': '分形噪波实验',
         'engine-3d': '引擎与3D',
         'procedural': '程序化生成'
     };

@@ -1982,6 +1982,8 @@ body::after {
 }
 
 .online-game-card {
+    --game-accent: var(--accent-cyan);
+    --game-accent-rgb: 0, 212, 255;
     display: grid;
     grid-template-columns: minmax(200px, 0.9fr) minmax(280px, 1.1fr);
     min-height: 360px;
@@ -1994,8 +1996,8 @@ body::after {
 
 .online-game-card:hover {
     transform: translateY(-5px);
-    border-color: rgba(0, 212, 255, 0.45);
-    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 35px rgba(0, 212, 255, 0.1);
+    border-color: rgba(var(--game-accent-rgb), 0.5);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.45), 0 0 35px rgba(var(--game-accent-rgb), 0.12);
 }
 
 .online-game-visual {
@@ -2021,8 +2023,8 @@ body::after {
     inset: 0;
     opacity: 0.65;
     background-image:
-        linear-gradient(rgba(0, 212, 255, 0.11) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(0, 212, 255, 0.11) 1px, transparent 1px);
+        linear-gradient(rgba(var(--game-accent-rgb), 0.11) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(var(--game-accent-rgb), 0.11) 1px, transparent 1px);
     background-size: 24px 24px;
 }
 
@@ -2031,17 +2033,69 @@ body::after {
     height: 180px;
     right: -65px;
     bottom: -65px;
-    border: 1px solid rgba(0, 212, 255, 0.45);
+    border: 1px solid rgba(var(--game-accent-rgb), 0.45);
     border-radius: 50%;
-    box-shadow: 0 0 0 20px rgba(0, 212, 255, 0.04), 0 0 0 40px rgba(0, 212, 255, 0.03);
+    box-shadow:
+        0 0 0 20px rgba(var(--game-accent-rgb), 0.04),
+        0 0 0 40px rgba(var(--game-accent-rgb), 0.03);
 }
 
 .online-game-card-puzzle .online-game-visual {
     background: linear-gradient(145deg, #06141a 0%, #0a0a10 78%);
 }
 
+.online-game-card-deck {
+    --game-accent: #f0a4ff;
+    --game-accent-rgb: 240, 164, 255;
+}
+
 .online-game-card-deck .online-game-visual {
     background: linear-gradient(145deg, #1b0d1f 0%, #0a0a10 78%);
+}
+
+.online-game-card-captcha {
+    --game-accent: #ffd166;
+    --game-accent-rgb: 255, 209, 102;
+}
+
+.online-game-card-connections {
+    --game-accent: #42e6a4;
+    --game-accent-rgb: 66, 230, 164;
+}
+
+.online-game-card-link-puzzle {
+    --game-accent: #ff8c61;
+    --game-accent-rgb: 255, 140, 97;
+}
+
+.online-game-card-bagburst {
+    --game-accent: #ff4d6d;
+    --game-accent-rgb: 255, 77, 109;
+}
+
+.online-game-card-ridgebreak {
+    --game-accent: #f4c95d;
+    --game-accent-rgb: 244, 201, 93;
+}
+
+.online-game-card-parking {
+    --game-accent: #5aa9ff;
+    --game-accent-rgb: 90, 169, 255;
+}
+
+.online-game-card-winning {
+    --game-accent: #6ee7c7;
+    --game-accent-rgb: 110, 231, 199;
+}
+
+.online-game-card-captcha .online-game-visual,
+.online-game-card-connections .online-game-visual,
+.online-game-card-link-puzzle .online-game-visual,
+.online-game-card-bagburst .online-game-visual,
+.online-game-card-ridgebreak .online-game-visual,
+.online-game-card-parking .online-game-visual,
+.online-game-card-winning .online-game-visual {
+    background: linear-gradient(145deg, rgba(var(--game-accent-rgb), 0.14) 0%, #0a0a10 78%);
 }
 
 .game-visual-label,
@@ -2053,7 +2107,7 @@ body::after {
 }
 
 .game-visual-label {
-    color: var(--accent-cyan);
+    color: var(--game-accent);
     font-size: 0.7rem;
     letter-spacing: 0.12em;
 }
@@ -2068,7 +2122,7 @@ body::after {
     font-weight: 700;
     line-height: 1.05;
     letter-spacing: 0;
-    text-shadow: 0 0 25px rgba(0, 212, 255, 0.32);
+    text-shadow: 0 0 25px rgba(var(--game-accent-rgb), 0.32);
 }
 
 .online-game-card-deck .game-visual-title {
@@ -2165,8 +2219,8 @@ body::after {
     gap: 10px;
     margin-top: auto;
     padding: 10px 0;
-    color: var(--accent-cyan);
-    border-bottom: 1px solid rgba(0, 212, 255, 0.45);
+    color: var(--game-accent);
+    border-bottom: 1px solid rgba(var(--game-accent-rgb), 0.45);
     text-decoration: none;
     font-weight: 600;
     transition: gap var(--transition), color var(--transition), border-color var(--transition);
@@ -2930,9 +2984,9 @@ body::after {
     isolation: isolate;
     overflow: hidden;
     padding: 11px 16px;
-    border: 1px solid rgba(0, 212, 255, 0.4);
-    background: rgba(0, 212, 255, 0.04);
-    box-shadow: inset 0 0 18px rgba(0, 212, 255, 0.04);
+    border: 1px solid rgba(var(--game-accent-rgb), 0.4);
+    background: rgba(var(--game-accent-rgb), 0.04);
+    box-shadow: inset 0 0 18px rgba(var(--game-accent-rgb), 0.04);
 }
 
 .game-launch-link::before {
@@ -2940,7 +2994,7 @@ body::after {
     position: absolute;
     inset: 0;
     z-index: -1;
-    background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+    background: linear-gradient(90deg, var(--game-accent), var(--accent-purple));
     transform: scaleX(0);
     transform-origin: left;
     transition: transform 0.35s cubic-bezier(0.22, 1, 0.36, 1);
@@ -2950,7 +3004,7 @@ body::after {
     gap: 16px;
     color: var(--bg-primary);
     border-color: transparent;
-    box-shadow: 0 0 24px rgba(0, 212, 255, 0.25);
+    box-shadow: 0 0 24px rgba(var(--game-accent-rgb), 0.25);
 }
 
 .game-launch-link:hover::before {
