@@ -569,6 +569,8 @@ img {
 .scramble {
     display: inline-block;
     cursor: default;
+    white-space: nowrap;
+    word-break: keep-all;
 }
 
 .scramble-char {
