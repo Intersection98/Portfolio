@@ -76,6 +76,7 @@
         <section class="hero" id="hero">
             <canvas id="noiseCanvas" class="hero-noise" aria-hidden="true"></canvas>
             <div class="hero-vignette" aria-hidden="true"></div>
+            <canvas id="robotArmCanvas" class="hero-robot" aria-hidden="true"></canvas>
 
             <div class="hero-inner">
                 <div class="hero-copy">
@@ -138,13 +139,13 @@
                 <div>
                     <p class="section-no pixel">STAGE 01</p>
                     <h2 class="section-title"><span class="scramble">游戏厅</span> <span class="en">ARCADE</span></h2>
-                    <p class="section-desc">浏览器里直接开玩，无需下载。选一台机器，投币吧。</p>
+                    <p class="section-desc">在线游戏与交互项目。选一台机器，投币吧。</p>
                 </div>
                 <div class="arcade-tools">
                     <div class="chips" id="gameFilter" role="tablist" aria-label="游戏类型">
                         <button class="chip active" data-genre="all">全部</button>
                         <button class="chip" data-genre="puzzle">解谜</button>
-                        <button class="chip" data-genre="strategy">策略棋</button>
+                        <button class="chip" data-genre="strategy">抽象棋</button>
                         <button class="chip" data-genre="builder">卡牌构筑</button>
                     </div>
                     <button class="btn btn-primary btn-sm" id="randomGame" data-cursor="ROLL">🎲 帮我选一个</button>
@@ -225,7 +226,7 @@
                 </div>
             </div>
             <footer class="footer pixel">
-                <span>© 2025 分形噪波的十字路口</span>
+                <span>© 2026 分形噪波的十字路口</span>
                 <a href="#top" data-cursor="UP">▲ 回到顶部</a>
             </footer>
         </section>

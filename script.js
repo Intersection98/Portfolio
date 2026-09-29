@@ -14,8 +14,8 @@ const games = [
         en: 'THE LOGIC OF WINNING',
         genre: 'strategy',
         genreLabel: '互动博弈论',
-        desc: '以交互方式观察双人棋类游戏的策略结构，在操作与推演中理解“必胜”背后的逻辑。',
-        facts: ['博弈论', '互动讲解'],
+        desc: '交互式视频，在操作与推演中理解“必胜”背后的逻辑与数学问题。',
+        facts: ['博弈论', '图论', '状态空间'],
         url: 'https://www.bilibili.com/toy/thelogicofwinning/index.html',
         cta: '开始探索',
         scene: 'tree',
@@ -28,7 +28,7 @@ const games = [
         en: 'PARKING KING',
         genre: 'puzzle',
         genreLabel: '挪车解谜',
-        desc: '从经典挪车玩法出发，加入隧道、转盘与门闸等原创机制。规划每一步，让目标车辆驶出拥堵。',
+        desc: '经典挪车解谜玩法，加入隧道、转盘与门闸等机制。规划每一步，让目标车辆驶出停车场。',
         facts: ['48 关', '逻辑解谜'],
         url: 'https://www.bilibili.com/toy/parkingking/index.html',
         cta: '开始挪车',
@@ -53,7 +53,7 @@ const games = [
         en: 'LINK PUZZLE 100',
         genre: 'puzzle',
         genreLabel: '连线解谜',
-        desc: '收录数连、数回、数桥与珍珠等十二种经典连线谜题，共一百关，难度逐章递进。',
+        desc: '包括数连、数回、数桥与珍珠等十二种经典连线谜题，共一百关，难度逐章递进。',
         facts: ['100 关', '12 种谜题'],
         url: 'https://intersection98.github.io/linkpuzzlegame/',
         cta: '挑战关卡',
@@ -63,10 +63,10 @@ const games = [
     {
         title: '绝岭破局',
         en: 'RIDGE BREAK',
-        genre: 'strategy',
+        genre: 'strategy puzzle',
         genreLabel: '抽象棋合集',
         desc: '四款极简双人抽象棋。扮演先手玩家，挑战总能给出全局最优解的电脑，寻找必胜破局之路。',
-        facts: ['4 款棋', '完美 AI'],
+        facts: ['4 款抽象棋', '跳转完美电脑'],
         url: 'https://www.bilibili.com/toy/Ridgebreak/index.html',
         cta: '寻找破局',
         scene: 'ridge',
@@ -78,7 +78,7 @@ const games = [
         genre: 'puzzle',
         genreLabel: '对话解谜',
         desc: '扮演无所不知的大模型，回应逐步升级的刁钻问题。在对话的前后规则中寻找破局方式。',
-        facts: ['对话式', 'LLM'],
+        facts: ['对话式','解谜', 'LLM'],
         url: 'https://intersection98.github.io/Do-not-ask-LLM/',
         cta: '开始游戏',
         scene: 'chat',
@@ -101,7 +101,7 @@ const games = [
         en: 'ASCENSION',
         genre: 'builder',
         genreLabel: '卡牌构筑',
-        desc: 'Ascension 十周年纪念版。构筑牌组、积累资源与荣誉，与电脑对手完成一局卡牌对战。',
+        desc: '经典Ascension 十周年纪念版复刻。内置强化学习电脑对手。',
         facts: ['牌组构筑', '人机对战'],
         url: 'https://intersection98.github.io/Ascension/',
         cta: '进入对局',
@@ -823,6 +823,409 @@ void main(){
     document.addEventListener('themechange', () => { readPalette(); if (REDUCED) draw(performance.now()); });
     if (REDUCED) draw(start + 4000);
     else requestAnimationFrame(loop);
+}
+
+/* ============================================
+   Arcade robot arm — sliding rail + continuous FABRIK
+   ============================================ */
+function initRobotArm() {
+    const canvas = $('#robotArmCanvas');
+    const hero = $('#hero');
+    const ticker = $('.ticker');
+    const ctx = canvas?.getContext('2d');
+    if (!ctx || !hero || !ticker) return;
+
+    const motion = window.matchMedia('(prefers-reduced-motion: reduce)');
+    const segments = [
+        { length: 160, angle: -2.3, width: 22 },
+        { length: 140, angle: -.85, width: 20 },
+        { length: 110, angle: -.9, width: 16 },
+        { length: 80, angle: -.2, width: 12 }
+    ];
+    const reach = segments.reduce((sum, segment) => sum + segment.length, 0);
+    const restOffset = segments.reduce((offset, segment) => ({
+        x: offset.x + Math.cos(segment.angle) * segment.length,
+        y: offset.y + Math.sin(segment.angle) * segment.length
+    }), { x: 0, y: 0 });
+    const target = { x: 0, y: 0 };
+    const pointer = { x: 0, y: 0, active: false };
+    const points = Array.from({ length: segments.length + 1 }, () => ({ x: 0, y: 0 }));
+    const arm = { baseX: 0, baseY: 0, minX: 0, maxX: 0, railY: 0, joints: points.map(point => ({ ...point })) };
+    const compact = window.matchMedia('(max-width: 640px)');
+    let width = 0, height = 0, scale = 1, originY = 0, visible = false, paintBounds = null;
+    let surface = { x0: 0, y0: 0, x1: 1, y1: 0, angle: 0 };
+    let frame = 0, previousTime = 0, elapsed = 0, touchTimer = 0;
+    let colors = {};
+    const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+
+    function readPalette() {
+        const style = getComputedStyle(hero);
+        const color = name => style.getPropertyValue(`--${name}`).trim();
+        colors = { acid: color('acid'), pink: color('pink'), ink: color('ink'), surface: color('surface'), line: color('line'), dark: color('on-accent'), shadow: color('shadow') };
+        segments.forEach((segment, i) => { segment.color = i % 2 ? '#f5f1e6' : colors.acid; });
+    }
+
+    function restTarget() {
+        return { x: width * .48 + restOffset.x, y: arm.baseY + restOffset.y };
+    }
+
+    function measureSurface(heroRect) {
+        const rect = ticker.getBoundingClientRect();
+        const style = getComputedStyle(ticker);
+        const matrix = new DOMMatrix(style.transform);
+        const [ox, oy] = style.transformOrigin.split(' ').map(parseFloat);
+        const transform = (x, y) => ({
+            x: matrix.a * (x - ox) + matrix.c * (y - oy) + matrix.e + ox,
+            y: matrix.b * (x - ox) + matrix.d * (y - oy) + matrix.f + oy
+        });
+        const corners = [
+            transform(0, 0), transform(ticker.offsetWidth, 0),
+            transform(0, ticker.offsetHeight), transform(ticker.offsetWidth, ticker.offsetHeight)
+        ];
+        const layoutLeft = rect.left - Math.min(...corners.map(point => point.x));
+        const layoutTop = rect.top - Math.min(...corners.map(point => point.y));
+        const left = transform(0, 0), right = transform(ticker.offsetWidth, 0);
+        surface = {
+            x0: (layoutLeft + left.x - heroRect.left) / scale,
+            y0: (layoutTop + left.y - heroRect.top - originY) / scale,
+            x1: (layoutLeft + right.x - heroRect.left) / scale,
+            y1: (layoutTop + right.y - heroRect.top - originY) / scale,
+            angle: Math.atan2(right.y - left.y, right.x - left.x)
+        };
+    }
+
+    function surfaceY(x) {
+        return lerp(surface.y0, surface.y1, (x - surface.x0) / (surface.x1 - surface.x0));
+    }
+
+    function resize() {
+        const rect = hero.getBoundingClientRect();
+        if (!rect.width || !rect.height) return;
+        const initialized = width > 0;
+        const baseRatio = initialized ? arm.baseX / width : .48;
+        const oldScale = scale, oldOriginY = originY;
+        scale = clamp(rect.width / 860, .56, 1);
+        width = rect.width / scale;
+        const canvasHeight = Math.min(rect.height, (reach + 105) * scale);
+        height = canvasHeight / scale;
+        originY = rect.height - canvasHeight;
+        canvas.style.setProperty('--arm-height', `${canvasHeight}px`);
+        const dpr = Math.min(window.devicePixelRatio || 1, 2);
+        const pixelWidth = Math.round(rect.width * dpr), pixelHeight = Math.round(canvasHeight * dpr);
+        if (canvas.width !== pixelWidth) canvas.width = pixelWidth;
+        if (canvas.height !== pixelHeight) canvas.height = pixelHeight;
+        ctx.setTransform(canvas.width / width, 0, 0, canvas.height / height, 0, 0);
+        const gutter = parseFloat(getComputedStyle(hero).paddingLeft) / scale;
+        arm.minX = gutter + 20;
+        arm.maxX = width - arm.minX;
+        arm.baseX = clamp(width * baseRatio, arm.minX, arm.maxX);
+        measureSurface(rect);
+        arm.railY = surfaceY(arm.baseX) - 1;
+        arm.baseY = arm.railY - 31;
+        if (initialized && pointer.active) {
+            target.x *= oldScale / scale;
+            target.y = (target.y * oldScale + oldOriginY - originY) / scale;
+            pointer.x = clamp(pointer.x * oldScale / scale, 25, width - 25);
+            pointer.y = clamp((pointer.y * oldScale + oldOriginY - originY) / scale, 25 - originY / scale, arm.baseY - 32);
+        } else Object.assign(target, restTarget());
+        solveIK(initialized ? 1 / 60 : 0);
+        paintBounds = { x: 0, y: 0, right: width, bottom: height };
+        draw();
+        start();
+    }
+
+    // Place a joint at a fixed distance; coincident points keep their previous direction.
+    function constrain(point, anchor, length, fallbackAngle) {
+        const dx = point.x - anchor.x, dy = point.y - anchor.y;
+        const distance = Math.hypot(dx, dy);
+        const ux = distance > .0001 ? dx / distance : Math.cos(fallbackAngle);
+        const uy = distance > .0001 ? dy / distance : Math.sin(fallbackAngle);
+        point.x = anchor.x + ux * length;
+        point.y = anchor.y + uy * length;
+    }
+
+    function solveIK(dt = 0) {
+        points[0].x = arm.baseX;
+        points[0].y = arm.baseY;
+        segments.forEach((segment, i) => {
+            points[i + 1].x = points[i].x + Math.cos(segment.angle) * segment.length;
+            points[i + 1].y = points[i].y + Math.sin(segment.angle) * segment.length;
+        });
+
+        const distance = Math.hypot(target.x - arm.baseX, target.y - arm.baseY);
+        if (distance >= reach) {
+            const angle = Math.atan2(target.y - arm.baseY, target.x - arm.baseX);
+            segments.forEach((segment, i) => {
+                points[i + 1].x = points[i].x + Math.cos(angle) * segment.length;
+                points[i + 1].y = points[i].y + Math.sin(angle) * segment.length;
+            });
+        } else {
+            for (let iteration = 0; iteration < 10; iteration++) {
+                Object.assign(points[segments.length], target);
+                for (let i = segments.length - 1; i >= 0; i--) {
+                    constrain(points[i], points[i + 1], segments[i].length, segments[i].angle + Math.PI);
+                }
+                points[0].x = arm.baseX;
+                points[0].y = arm.baseY;
+                for (let i = 0; i < segments.length; i++) {
+                    constrain(points[i + 1], points[i], segments[i].length, segments[i].angle);
+                }
+                const end = points[segments.length];
+                if (Math.hypot(end.x - target.x, end.y - target.y) < .5) break;
+            }
+        }
+        arm.joints[0].x = arm.baseX;
+        arm.joints[0].y = arm.baseY;
+        segments.forEach((segment, i) => {
+            const angle = Math.atan2(points[i + 1].y - points[i].y, points[i + 1].x - points[i].x);
+            const delta = Math.atan2(Math.sin(angle - segment.angle), Math.cos(angle - segment.angle));
+            // Limit angular speed instead of blending joint positions, which would stretch links.
+            segment.angle += dt ? clamp(delta, -7 * dt, 7 * dt) : delta;
+            arm.joints[i + 1].x = arm.joints[i].x + Math.cos(segment.angle) * segment.length;
+            arm.joints[i + 1].y = arm.joints[i].y + Math.sin(segment.angle) * segment.length;
+        });
+    }
+
+    function circle(x, y, radius, fill) {
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, Math.PI * 2);
+        ctx.fillStyle = fill;
+        ctx.fill();
+    }
+
+    function hexagon(x, y, radius, rotation) {
+        ctx.beginPath();
+        for (let i = 0; i < 6; i++) {
+            const angle = Math.PI / 3 * i + rotation;
+            const px = x + radius * Math.cos(angle), py = y + radius * Math.sin(angle);
+            if (i === 0) ctx.moveTo(px, py);
+            else ctx.lineTo(px, py);
+        }
+        ctx.closePath();
+    }
+
+    function panel(x, y, w, h, r, fill, edge = colors.dark, thickness = 2) {
+        ctx.beginPath();
+        ctx.roundRect(x, y, w, h, r);
+        ctx.fillStyle = fill;
+        ctx.fill();
+        ctx.strokeStyle = edge;
+        ctx.lineWidth = thickness;
+        ctx.stroke();
+    }
+
+    function draw() {
+        // Redraw only the moving mechanism's old/new bounds.
+        const bounds = { x: arm.baseX - 42, y: arm.baseY - 36, right: arm.baseX + 42, bottom: arm.railY + 20 };
+        for (const joint of arm.joints) {
+            bounds.x = Math.min(bounds.x, joint.x - 36);
+            bounds.y = Math.min(bounds.y, joint.y - 36);
+            bounds.right = Math.max(bounds.right, joint.x + 36);
+            bounds.bottom = Math.max(bounds.bottom, joint.y + 36);
+        }
+        if (pointer.active && target.y > 12) {
+            bounds.x = Math.min(bounds.x, target.x - 14);
+            bounds.y = Math.min(bounds.y, target.y - 14);
+            bounds.right = Math.max(bounds.right, target.x + 14);
+            bounds.bottom = Math.max(bounds.bottom, target.y + 14);
+        }
+        const old = paintBounds || bounds;
+        const x = Math.max(0, Math.floor(Math.min(old.x, bounds.x)));
+        const y = Math.max(0, Math.floor(Math.min(old.y, bounds.y)));
+        const w = Math.min(width, Math.ceil(Math.max(old.right, bounds.right))) - x;
+        const h = Math.min(height, Math.ceil(Math.max(old.bottom, bounds.bottom))) - y;
+        paintBounds = bounds;
+        ctx.save();
+        ctx.beginPath();
+        ctx.rect(x, y, w, h);
+        ctx.clip();
+        ctx.clearRect(x, y, w, h);
+
+        // Hard shadows and outlined shells match the buttons and arcade cabinet.
+        ctx.lineCap = 'round';
+        for (const [i, segment] of segments.entries()) {
+            const start = arm.joints[i], end = arm.joints[i + 1];
+            ctx.beginPath();
+            ctx.moveTo(start.x + 4, start.y + 4);
+            ctx.lineTo(end.x + 4, end.y + 4);
+            ctx.strokeStyle = colors.shadow;
+            ctx.lineWidth = segment.width + 6;
+            ctx.stroke();
+        }
+        ctx.save();
+        ctx.translate(arm.baseX, arm.baseY);
+        ctx.rotate(surface.angle);
+        panel(-26, -1, 60, 28, 5, colors.shadow);
+        panel(-30, -5, 60, 28, 5, colors.acid, colors.ink, 3);
+        panel(-27, -2, 54, 22, 3, colors.acid);
+        ctx.fillStyle = colors.dark;
+        for (let i = -2; i <= 2; i++) ctx.fillRect(i * 9 - 2, 12, 4, 6);
+        for (const offset of [-20, 20]) {
+            circle(offset, 24, 8, colors.ink);
+            circle(offset, 24, 6, colors.dark);
+            circle(offset, 24, 2, colors.pink);
+        }
+        ctx.restore();
+        segments.forEach((segment, i) => {
+            const start = arm.joints[i], end = arm.joints[i + 1];
+            ctx.beginPath();
+            ctx.moveTo(start.x, start.y);
+            ctx.lineTo(end.x, end.y);
+            ctx.strokeStyle = colors.ink;
+            ctx.lineWidth = segment.width + 6;
+            ctx.stroke();
+            ctx.strokeStyle = colors.dark;
+            ctx.lineWidth = segment.width + 3;
+            ctx.stroke();
+            ctx.strokeStyle = segment.color;
+            ctx.lineWidth = segment.width - 2;
+            ctx.stroke();
+            // A recessed slot gives each link a rigid, machined structure.
+            const ux = (end.x - start.x) / segment.length, uy = (end.y - start.y) / segment.length;
+            ctx.beginPath();
+            ctx.moveTo(start.x + ux * 28, start.y + uy * 28);
+            ctx.lineTo(end.x - ux * 26, end.y - uy * 26);
+            ctx.strokeStyle = colors.dark;
+            ctx.lineWidth = 3;
+            ctx.stroke();
+        });
+        segments.forEach((segment, i) => {
+            const joint = arm.joints[i], radius = i === 0 ? 20 : 17 - i * 2;
+            circle(joint.x + 3, joint.y + 3, radius + 2, colors.shadow);
+            circle(joint.x, joint.y, radius + 2, colors.ink);
+            circle(joint.x, joint.y, radius, colors.dark);
+            circle(joint.x, joint.y, radius - 3, i % 2 ? colors.pink : colors.acid);
+            circle(joint.x, joint.y, radius * .38, colors.dark);
+            const boltAngle = segment.angle;
+            ctx.beginPath();
+            ctx.moveTo(joint.x - Math.cos(boltAngle) * 3, joint.y - Math.sin(boltAngle) * 3);
+            ctx.lineTo(joint.x + Math.cos(boltAngle) * 3, joint.y + Math.sin(boltAngle) * 3);
+            ctx.strokeStyle = '#f5f1e6';
+            ctx.lineWidth = 1.5;
+            ctx.stroke();
+        });
+
+        const end = arm.joints[segments.length];
+        const rotation = segments[segments.length - 1].angle;
+        hexagon(end.x + 4, end.y + 4, 23, rotation);
+        ctx.fillStyle = colors.pink;
+        ctx.fill();
+        hexagon(end.x, end.y, 23, rotation);
+        ctx.fillStyle = colors.dark;
+        ctx.fill();
+        ctx.strokeStyle = colors.ink;
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        hexagon(end.x, end.y, 18, rotation);
+        ctx.fillStyle = colors.acid;
+        ctx.fill();
+        circle(end.x, end.y, 9, colors.dark);
+        ctx.save();
+        ctx.translate(end.x, end.y);
+        ctx.rotate(elapsed * .7);
+        ctx.fillStyle = colors.acid;
+        ctx.fillRect(-5, -1.5, 10, 3);
+        ctx.fillRect(-1.5, -5, 3, 10);
+        ctx.restore();
+
+        if (pointer.active && target.y > 12 && Math.hypot(end.x - target.x, end.y - target.y) > 30) {
+            ctx.strokeStyle = colors.pink;
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(target.x - 5, target.y - 5, 10, 10);
+        }
+        ctx.restore();
+    }
+
+    function animate(now) {
+        frame = 0;
+        const dt = previousTime ? Math.min((now - previousTime) / 1000, .05) : 1 / 60;
+        previousTime = now;
+        elapsed += dt;
+        const desired = pointer.active ? pointer : restTarget();
+        const follow = 1 - Math.exp(-20 * dt);
+        target.x = lerp(target.x, desired.x, follow);
+        target.y = lerp(target.y, desired.y, follow);
+        const baseTarget = pointer.active ? pointer.x : width * .48;
+        arm.baseX = lerp(arm.baseX, clamp(baseTarget, arm.minX, arm.maxX), 1 - Math.exp(-(pointer.active ? 10 : 6) * dt));
+        arm.railY = surfaceY(arm.baseX) - 1;
+        arm.baseY = arm.railY - 31;
+        solveIK(dt);
+        draw();
+        start();
+    }
+
+    function start() {
+        if (!frame && visible && !document.hidden && !motion.matches && !compact.matches) {
+            frame = requestAnimationFrame(animate);
+        }
+    }
+
+    function stop() {
+        cancelAnimationFrame(frame);
+        frame = 0;
+        previousTime = 0;
+    }
+
+    function releasePointer() {
+        clearTimeout(touchTimer);
+        pointer.active = false;
+    }
+
+    function trackPointer(event) {
+        if (motion.matches) return;
+        clearTimeout(touchTimer);
+        const rect = hero.getBoundingClientRect();
+        pointer.x = clamp((event.clientX - rect.left) / scale, 25, width - 25);
+        pointer.y = clamp((event.clientY - rect.top - originY) / scale, 25 - originY / scale, arm.baseY - 32);
+        pointer.active = true;
+    }
+
+    hero.addEventListener('pointermove', event => {
+        if (event.pointerType !== 'touch') trackPointer(event);
+    }, { passive: true });
+    hero.addEventListener('pointerdown', event => {
+        if (!event.target.closest('a, button')) trackPointer(event);
+    }, { passive: true });
+    hero.addEventListener('pointerleave', event => {
+        if (event.pointerType !== 'touch') releasePointer();
+    });
+    hero.addEventListener('pointerup', event => {
+        if (event.pointerType === 'touch') touchTimer = setTimeout(releasePointer, 1800);
+    }, { passive: true });
+    hero.addEventListener('pointercancel', releasePointer);
+    window.addEventListener('blur', releasePointer);
+    document.addEventListener('visibilitychange', () => {
+        if (document.hidden) { releasePointer(); stop(); }
+        else start();
+    });
+    document.addEventListener('themechange', () => {
+        readPalette();
+        paintBounds = { x: 0, y: 0, right: width, bottom: height };
+        draw();
+    });
+    compact.addEventListener('change', () => {
+        stop();
+        if (!compact.matches) resize();
+    });
+    motion.addEventListener('change', () => {
+        stop();
+        releasePointer();
+        if (motion.matches) {
+            arm.baseX = width * .48;
+            Object.assign(target, restTarget());
+            solveIK();
+            draw();
+        } else start();
+    });
+    new IntersectionObserver(([entry]) => {
+        visible = entry.isIntersecting;
+        if (visible) start();
+        else { releasePointer(); stop(); }
+    }).observe(hero);
+    readPalette();
+    resize();
+    new ResizeObserver(resize).observe(hero);
+    window.addEventListener('resize', resize);
 }
 
 /* ============================================
@@ -1635,7 +2038,7 @@ function initGameFilter() {
         chips.forEach(c => c.classList.toggle('active', c === chip));
         const genre = chip.dataset.genre;
         $$('.game-card').forEach(card => {
-            const show = genre === 'all' || card.dataset.genre === genre;
+            const show = genre === 'all' || card.dataset.genre.split(/\s+/).includes(genre);
             card.classList.toggle('hidden', !show);
             // the featured layout only makes sense with the full lineup
             card.classList.toggle(
@@ -2006,6 +2409,7 @@ function initCopyEmail() {
 document.addEventListener('DOMContentLoaded', () => {
     initTheme();
     initNoiseHero();
+    initRobotArm();
     initTyping();
     initStats();
     initTicker();
