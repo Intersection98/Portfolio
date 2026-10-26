@@ -202,6 +202,15 @@ const vibeCodingProjects = [
 const portfolioProjects = [
     // 游戏设计与开发
     {
+        id: 'p17',
+        title: '挪车里的数学宇宙',
+        description: '从状态空间、图论、DFS、BFS 与群论出发，拆解滑动挪车解谜背后的算法与数学原理。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117506647856580&bvid=BV1JAnd63Ec7&cid=43070131209&p=1',
+        tags: ['Search Algorithm', 'Graph Theory', 'Puzzle'],
+        category: 'fractal-lab',
+        date: '2026-10-26'
+    },
+    {
         id: 'p11',
         title: '双人棋类游戏必胜的秘密',
         description: '从博弈论、图论与状态空间出发，探索双人抽象棋中必胜策略的逻辑。',
@@ -537,6 +546,7 @@ const covers = {
     BV16m41117XG: 'c619744b2dbb76953024a46f89c3eeff32eb6c89.jpg',
     BV17Z4y1m7Sy: 'a5e1971763eb2b67eff70135dd3bbcdb44484361.jpg',
     BV18HmJBdE6s: '4a90023a65e2d755140dd7c9e595bcdeb2c4e9f8.png',
+    BV1JAnd63Ec7: '8e60b7de75e0957c34e82f3bb1e4f33cc58fa96c.jpg',
     BV1akshzHE4e: 'a20f6082e5fdb6dd2ca756a371c18a42145b4e84.jpg',
     BV1bxFHevEXk: '67b753edc31f6f8ebdc73318f2a03014508b0b61.png',
     BV1c94y1R7fp: '99f397a7ba62b47e9051349636dba448b2180d5f.jpg',
