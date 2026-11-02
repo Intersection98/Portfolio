@@ -49,6 +49,19 @@ const games = [
         accent: 'var(--pink)'
     },
     {
+        title: '挪挪动物园',
+        en: 'NUDGE ZOO',
+        genre: 'puzzle',
+        genreLabel: '动物滑块解谜',
+        desc: '在立体桌游盒中挪动动物拼块，帮助小熊猫回家。完成关卡后，还能挑战复原盒盖上的动物园图案。',
+        facts: ['动物滑块', '立体桌游盒', '隐藏挑战'],
+        url: 'https://www.bilibili.com/toy/NudgeZoo/index.html',
+        cta: '开始挪挪',
+        scene: 'zoo',
+        accent: 'var(--cyan)',
+        isNew: true
+    },
+    {
         title: '猫猫连线解谜100',
         en: 'LINK PUZZLE 100',
         genre: 'puzzle',
@@ -201,6 +214,15 @@ const vibeCodingProjects = [
 // Portfolio Projects
 const portfolioProjects = [
     // 游戏设计与开发
+    {
+        id: 'p18',
+        title: '把大象放进盒子需要几步？',
+        description: '挪挪动物园：融合 3D 拼图与华容道的原创解谜游戏，挪动动物拼块，用尽可能少的步数完成挑战。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117539094928193&bvid=BV1fAxp6fEfn&cid=43223876204&p=1',
+        tags: ['3D Puzzle', 'Game Design', 'BilibiliToy'],
+        category: 'game-design',
+        date: '2026-11-01'
+    },
     {
         id: 'p17',
         title: '挪车里的数学宇宙',
@@ -554,6 +576,7 @@ const covers = {
     BV1EnhE68EqT: '10f1e5808cd5c0a667ff2fb4ba24a1e720a8d978.jpg',
     BV1F34y1C7wc: '5362cbc573283a30a4b9bd4c175b60d90d18805a.jpg',
     BV1FHm8BqEgJ: 'c00aa9115856fb3b03d45066a6047152483c0e77.jpg',
+    BV1fAxp6fEfn: '1e567672352e024f9621447a26056fa2112b1a32.jpg',
     BV1fKXMYxE73: '819ee11e5dd7f5d0e098b72eb16aa8ebebafb0e5.jpg',
     BV1g8411k7Uu: '0e453f61371f15b9956ba49471dc2fdb9a390b5d.jpg',
     BV1gL4y1g7p2: '217f0fde7513437d5d1c9b7b5121c4681e5f9257.jpg',
@@ -1396,6 +1419,50 @@ function hud(ctx, w, h, left, right, color = PAL.ink) {
 }
 
 const SCENES = {
+    /* 挪挪动物园 — an illustrative animal-piece tray and sliding panda */
+    zoo: {
+        draw(ctx, w, h, t) {
+            screenBg(ctx, w, h);
+            const c = Math.min(w * .64, h * .68) / 6;
+            const ox = (w - 6 * c) / 2, oy = (h - 6 * c) / 2 + h * .05;
+            const p = t % 6, progress = ease(seg(p, .7, 3.8));
+            ctx.fillStyle = PAL.dim;
+            rr(ctx, ox - 8, oy - 8, 6 * c + 16, 6 * c + 16, 12); ctx.fill();
+            for (let y = 0; y < 6; y++) for (let x = 0; x < 6; x++) {
+                ctx.fillStyle = 'rgba(245,241,230,.07)';
+                rr(ctx, ox + x * c + 1, oy + y * c + 1, c - 2, c - 2, 3); ctx.fill();
+            }
+            const pieces = [
+                { x: 0, y: 0, col: PAL.cyan, cells: [[0,0],[1,0],[2,0],[0,1],[2,1]], face: [1,.15] },
+                { x: 4, y: progress, col: PAL.pink, cells: [[0,0],[1,0],[0,1],[1,1],[0,2]], face: [.5,.7] },
+                { x: 0, y: 3, col: PAL.violet, cells: [[0,0],[1,0],[0,1],[1,1],[0,2]], face: [.5,.4] },
+                { x: 2, y: 4, col: PAL.sun, cells: [[0,0],[1,0],[1,1],[2,1]], face: [.5,.15] },
+                { x: 3, y: 2 + ease(seg(p, 2.2, 4.6)) * 1.2, col: PAL.acid, cells: [[0,0]], face: [0,0], panda: true }
+            ];
+            pieces.forEach(piece => {
+                ctx.fillStyle = piece.col;
+                piece.cells.forEach(([x, y]) => {
+                    rr(ctx, ox + (piece.x + x) * c + 2, oy + (piece.y + y) * c + 2, c - 4, c - 4, 4); ctx.fill();
+                });
+                const fx = ox + (piece.x + piece.face[0] + .5) * c;
+                const fy = oy + (piece.y + piece.face[1] + .5) * c;
+                ctx.fillStyle = PAL.bg;
+                for (const side of [-1, 1]) {
+                    ctx.beginPath();
+                    ctx.arc(fx + side * c * .17, fy - c * .06, c * (piece.panda ? .095 : .055), 0, Math.PI * 2);
+                    ctx.fill();
+                }
+                ctx.strokeStyle = PAL.bg; ctx.lineWidth = Math.max(1.2, c * .05);
+                ctx.beginPath(); ctx.arc(fx, fy + c * .06, c * .13, .15, Math.PI - .15); ctx.stroke();
+                if (piece.panda) {
+                    for (const side of [-1, 1]) {
+                        ctx.beginPath(); ctx.arc(fx + side * c * .26, fy - c * .29, c * .09, 0, Math.PI * 2); ctx.fill();
+                    }
+                }
+            });
+            hud(ctx, w, h, 'NUDGE ZOO', 'SLIDE & SOLVE');
+        }
+    },
     /* 谁是挪车王 — rush-hour board, blockers slide, red car exits */
     parking: {
         draw(ctx, w, h, t) {
