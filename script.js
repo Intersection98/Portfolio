@@ -7,8 +7,36 @@
    Project Data
    ============================================ */
 
-// Online games — the arcade. First entry is featured.
+// Online games — the arcade. The first two entries are featured.
 const games = [
+    {
+        title: '猫是液体',
+        en: 'STRETCHY CATS',
+        genre: 'puzzle',
+        genreLabel: '数连 × 推箱子',
+        desc: '把软乎乎的猫猫拉长，送到相同数字的小窝。数连与推箱子结合，再加入门控和多控机制，挑战 32 关。',
+        facts: ['32 关', '数连与推箱', '门控机关'],
+        url: 'https://www.bilibili.com/toy/stretchycats/index.html',
+        cta: '帮猫回家',
+        scene: 'stretch',
+        accent: 'var(--pink)',
+        isNew: true,
+        featured: true
+    },
+    {
+        title: '挪挪动物园',
+        en: 'NUDGE ZOO',
+        genre: 'puzzle',
+        genreLabel: '动物滑块解谜',
+        desc: '在立体桌游盒中挪动动物拼块，帮助小熊猫回家。完成关卡后，还能挑战复原盒盖上的动物园图案。',
+        facts: ['动物滑块', '立体桌游盒', '隐藏挑战'],
+        url: 'https://www.bilibili.com/toy/NudgeZoo/index.html',
+        cta: '开始挪挪',
+        scene: 'zoo',
+        accent: 'var(--cyan)',
+        isNew: true,
+        featured: true
+    },
     {
         title: '双人棋类游戏必胜的秘密',
         en: 'THE LOGIC OF WINNING',
@@ -20,8 +48,7 @@ const games = [
         cta: '开始探索',
         scene: 'tree',
         accent: 'var(--acid)',
-        isNew: true,
-        featured: true
+        isNew: true
     },
     {
         title: '谁是挪车王',
@@ -49,15 +76,28 @@ const games = [
         accent: 'var(--pink)'
     },
     {
-        title: '挪挪动物园',
-        en: 'NUDGE ZOO',
-        genre: 'puzzle',
-        genreLabel: '动物滑块解谜',
-        desc: '在立体桌游盒中挪动动物拼块，帮助小熊猫回家。完成关卡后，还能挑战复原盒盖上的动物园图案。',
-        facts: ['动物滑块', '立体桌游盒', '隐藏挑战'],
-        url: 'https://www.bilibili.com/toy/NudgeZoo/index.html',
-        cta: '开始挪挪',
-        scene: 'zoo',
+        title: '幕间回响',
+        en: 'BETWEEN FRAMES',
+        genre: 'creative',
+        genreLabel: '电影台词拼贴',
+        desc: '输入关键词，寻找电影里的回响。把喜欢的台词做成票根，或拼贴成属于自己的电影海报。',
+        facts: ['台词搜索', '票根分享', '海报拼贴'],
+        url: 'https://www.bilibili.com/toy/betweenframes/index.html',
+        cta: '寻找回响',
+        scene: 'frames',
+        accent: 'var(--sun)',
+        isNew: true
+    },
+    {
+        title: '傅立叶变换生成器',
+        en: 'FOURIER TRANSFORM',
+        genre: 'creative',
+        genreLabel: '数学动画工具',
+        desc: '上传图片或自由绘制，将轮廓转成旋转圆叠加的傅立叶级数动画。调整精度与速度，导出图像或视频。',
+        facts: ['图片转轮廓', '自由绘制', '动画导出'],
+        url: 'https://www.bilibili.com/toy/Fouriertransform/index.html',
+        cta: '生成动画',
+        scene: 'fourier',
         accent: 'var(--cyan)',
         isNew: true
     },
@@ -214,6 +254,42 @@ const vibeCodingProjects = [
 // Portfolio Projects
 const portfolioProjects = [
     // 游戏设计与开发
+    {
+        id: 'p22',
+        title: '挪挪动物园实况与游戏设计',
+        description: '作者挑战自己设计的 3D 拼图与华容道解谜，边玩边聊关卡与游戏设计。包含解法剧透，建议先体验游戏。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117579142140344&bvid=BV1wLWE6EEv6&cid=43428088820&p=1',
+        tags: ['Game Design', '3D Puzzle', 'Playthrough'],
+        category: 'game-design',
+        date: '2026-11-08'
+    },
+    {
+        id: 'p21',
+        title: '猫是液体：原创数连 × 推箱子解谜',
+        description: '软乎乎的猫猫连线解谜，融合数连、推箱、门控和多控机制，展示原创独立游戏的 32 道关卡。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117569394577506&bvid=BV16A4662E36&cid=43382736505&p=1',
+        tags: ['Numberlink', 'Sokoban', 'Game Design'],
+        category: 'game-design',
+        date: '2026-11-06'
+    },
+    {
+        id: 'p20',
+        title: '幕间回响：电影台词查找与拼贴',
+        description: '输入一个词，寻找包含它的电影台词，分享台词票根与拼贴海报，把念念不忘的对白留下来。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117564109755763&bvid=BV1ry4h6oEpP&cid=43356327313&p=1',
+        tags: ['Cinema', 'Typography', 'Creative Tool'],
+        category: 'creative-tools',
+        date: '2026-11-05'
+    },
+    {
+        id: 'p19',
+        title: '傅立叶变换生成器',
+        description: '上传图片或自由绘画，使用多种轮廓提取算法生成傅立叶级数动画，并导出图片或录制视频。',
+        iframeSrc: 'https://www.bilibili.com/blackboard/html5mobileplayer.html?isOutside=true&aid=117551661060452&bvid=BV1en4g6XEmo&cid=43289870701&p=1',
+        tags: ['Fourier Series', 'Visualization', 'Creative Tool'],
+        category: 'creative-tools',
+        date: '2026-11-03'
+    },
     {
         id: 'p18',
         title: '把大象放进盒子需要几步？',
@@ -563,6 +639,10 @@ const blogEntries = [
 
 // Bilibili cover images, keyed by bvid (files under i0.hdslb.com/bfs/archive/)
 const covers = {
+    BV1en4g6XEmo: '276abc1522bb68e17dc8533fe05399d97978c31e.jpg',
+    BV1ry4h6oEpP: '4074210d7e94422b1226b508cd7ad21e79d62e56.jpg',
+    BV16A4662E36: '79e5b1ab286dded779997d039975b344c1bf0bc8.jpg',
+    BV1wLWE6EEv6: '0e847466fd55a07b1aa1e0616ace1d06b0cfa4f0.jpg',
     BV111mjBkEDq: '8c653a38d9d26bed31a39faef00e950130bf5f44.png',
     BV13Bez6JEJV: 'dad21f5aae3e7c967a0736c0a351debb273c96a0.jpg',
     BV16m41117XG: 'c619744b2dbb76953024a46f89c3eeff32eb6c89.jpg',
@@ -607,6 +687,7 @@ const covers = {
 
 const categories = [
     { key: 'game-design', label: '游戏', accent: 'var(--acid)' },
+    { key: 'creative-tools', label: '创意工具', accent: 'var(--cyan)' },
     { key: 'fractal-lab', label: '分形噪波实验室', accent: 'var(--sun)' },
     { key: '3d-robotics', label: '3D打印与机器人', accent: 'var(--cyan)' },
     { key: 'aigc', label: 'AIGC', accent: 'var(--pink)' },
@@ -1419,33 +1500,237 @@ function hud(ctx, w, h, left, right, color = PAL.ink) {
 }
 
 const SCENES = {
-    /* 挪挪动物园 — an illustrative animal-piece tray and sliding panda */
-    zoo: {
+    /* 幕间回响 — illustrative film tickets, gathered into a collage */
+    frames: {
         draw(ctx, w, h, t) {
+            screenBg(ctx, w, h);
+            const cw = Math.min(w * .68, h * 1.1), ch = h * .23;
+            const p = (t % 6) / 6;
+            ['念念不忘', '必有回响', '把对白留在这里'].forEach((line, i) => {
+                const progress = ease(seg(p, i * .1, .4 + i * .1));
+                ctx.save();
+                ctx.translate(w / 2 + (1 - progress) * (i % 2 ? -w : w) * .3,
+                    h * (.31 + i * .2));
+                ctx.rotate((i - 1) * .065);
+                ctx.fillStyle = [PAL.sun, PAL.ink, PAL.pink][i];
+                rr(ctx, -cw / 2, -ch / 2, cw, ch, 6); ctx.fill();
+                ctx.fillStyle = PAL.bg;
+                for (const side of [-1, 1]) {
+                    ctx.beginPath(); ctx.arc(side * cw / 2, 0, ch * .1, 0, Math.PI * 2); ctx.fill();
+                }
+                ctx.strokeStyle = PAL.bg; ctx.lineWidth = 1;
+                ctx.setLineDash([3, 4]);
+                ctx.beginPath(); ctx.moveTo(-cw * .3, -ch * .35); ctx.lineTo(-cw * .3, ch * .35); ctx.stroke();
+                ctx.setLineDash([]);
+                txt(ctx, `0${i + 1}`, -cw * .4, 0, ch * .2, PAL.bg, { align: 'center', base: 'middle' });
+                txt(ctx, line, cw * .06, 0, Math.min(ch * .27, cw * .075), PAL.bg,
+                    { font: 'cn', align: 'center', base: 'middle' });
+                ctx.restore();
+            });
+            hud(ctx, w, h, 'BETWEEN FRAMES', 'FIND · COLLAGE');
+        }
+    },
+
+    /* 傅立叶变换 — identical coefficients drive circles and the traced curve */
+    fourier: {
+        terms: [[1, .65], [-3, .2], [5, .1], [-7, .05]],
+        draw(ctx, w, h, t) {
+            screenBg(ctx, w, h);
+            const radius = Math.min(w * .34, h * .34);
+            const phase = (t % 7) / 7 * Math.PI * 2;
+            const cx = w / 2, cy = h / 2 + h * .035;
+            const pointAt = a => this.terms.reduce((point, [f, r]) => [
+                point[0] + Math.cos(f * a) * radius * r,
+                point[1] + Math.sin(f * a) * radius * r
+            ], [cx, cy]);
+            ctx.strokeStyle = PAL.dim2; ctx.lineWidth = 1;
+            ctx.beginPath(); ctx.moveTo(cx - radius * 1.2, cy); ctx.lineTo(cx + radius * 1.2, cy);
+            ctx.moveTo(cx, cy - radius * 1.2); ctx.lineTo(cx, cy + radius * 1.2); ctx.stroke();
+            ctx.beginPath();
+            for (let i = 0; i <= 160; i++) {
+                const [x, y] = pointAt(i / 160 * Math.PI * 2);
+                if (!i) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            ctx.strokeStyle = PAL.cyan; ctx.lineWidth = 2.5; ctx.beginPath();
+            for (let i = 0; i <= 120; i++) {
+                const [x, y] = pointAt(i / 120 * phase);
+                if (!i) ctx.moveTo(x, y); else ctx.lineTo(x, y);
+            }
+            ctx.stroke();
+            let x = cx, y = cy;
+            this.terms.forEach(([f, r]) => {
+                const nx = x + Math.cos(f * phase) * radius * r;
+                const ny = y + Math.sin(f * phase) * radius * r;
+                ctx.strokeStyle = PAL.ink; ctx.lineWidth = 1; ctx.globalAlpha = .4;
+                ctx.beginPath(); ctx.arc(x, y, radius * r, 0, Math.PI * 2); ctx.stroke();
+                ctx.globalAlpha = 1;
+                ctx.beginPath(); ctx.moveTo(x, y); ctx.lineTo(nx, ny); ctx.stroke();
+                x = nx; y = ny;
+            });
+            ctx.fillStyle = PAL.sun; ctx.beginPath(); ctx.arc(x, y, 4, 0, Math.PI * 2); ctx.fill();
+            hud(ctx, w, h, 'FOURIER SERIES', '4 TERMS');
+        }
+    },
+
+    /* 猫是液体 — live campaign level 08, 给我留条缝 (双箱借道).
+       Cell IDs are row * 5 + column. Replay includes pushes and retractions. */
+    stretch: {
+        level: {
+            number: 8,
+            title: '给我留条缝',
+            size: 5,
+            starts: [20, 8],
+            homes: [23, 5],
+            walkable: [5, 6, 7, 8, 10, 11, 12, 13, 15, 16, 17, 18, 20, 21, 22, 23],
+            crates: [11, 12],
+            solution: [[0,15], [0,16], [0,11], [0,16], [0,21], [0,22],
+                [0,17], [0,12], [0,17], [0,18], [0,23],
+                [1,13], [1,12], [1,11], [1,10], [1,5]]
+        },
+        replay() {
+            let paths = this.level.starts.map(id => [id]), crates = [...this.level.crates];
+            const snapshot = () => ({ paths: paths.map(path => [...path]), crates: [...crates] });
+            const frames = [snapshot()];
+            this.level.solution.forEach(([cat, target]) => {
+                const path = paths[cat], retract = path.indexOf(target);
+                if (retract >= 0) paths[cat] = path.slice(0, retract + 1);
+                else {
+                    const box = crates.indexOf(target);
+                    if (box >= 0) crates[box] += target - path.at(-1);
+                    path.push(target);
+                }
+                frames.push(snapshot());
+            });
+            return frames;
+        },
+        draw(ctx, w, h, t, dt, state = {}) {
+            screenBg(ctx, w, h);
+            const level = this.level;
+            const c = Math.min(w * .66, h * .67) / level.size;
+            const ox = (w - 5 * c) / 2 + c / 2;
+            const oy = (h - 5 * c) / 2 + c / 2 + h * .025;
+            const pos = id => [ox + id % 5 * c, oy + Math.floor(id / 5) * c];
+            state.frames ||= this.replay();
+            const count = level.solution.length, duration = count * .5 + 3;
+            const p = t % duration, progress = Math.max(0, Math.min(count, (p - .5) / .5));
+            const index = Math.min(count, Math.floor(progress)), blend = ease(progress - index);
+            const before = state.frames[index], after = state.frames[Math.min(count, index + 1)];
+            const active = level.solution[index]?.[0];
+            ctx.globalAlpha = Math.min(1, seg(p, 0, .3), 1 - seg(p, duration - .4, duration));
+            for (let id = 0; id < 25; id++) {
+                const [x, y] = pos(id), walkable = level.walkable.includes(id);
+                ctx.fillStyle = walkable ? PAL.dim2 : 'rgba(245,241,230,.035)';
+                rr(ctx, x - c * .46, y - c * .46, c * .92, c * .92, 3); ctx.fill();
+            }
+            const colors = [PAL.hot, PAL.ink];
+            level.homes.forEach((id, cat) => {
+                const [x, y] = pos(id);
+                ctx.strokeStyle = colors[cat]; ctx.lineWidth = 2;
+                rr(ctx, x - c * .4, y - c * .4, c * .8, c * .8, c * .2); ctx.stroke();
+                txt(ctx, String(cat + 1), x, y, c * .4, colors[cat], { align: 'center', base: 'middle' });
+            });
+            before.paths.forEach((path, cat) => {
+                let points = path.map(pos);
+                if (cat === active) {
+                    const next = after.paths[cat];
+                    const [ax, ay] = pos(path.at(-1)), [bx, by] = pos(next.at(-1));
+                    const head = [lerp(ax, bx, blend), lerp(ay, by, blend)];
+                    points = next.length < path.length ? next.map(pos).concat([head]) : points.concat([head]);
+                }
+                const [hx, hy] = points.at(-1);
+                ctx.strokeStyle = colors[cat]; ctx.lineWidth = c * .52;
+                ctx.lineJoin = ctx.lineCap = 'round'; ctx.beginPath();
+                ctx.moveTo(...points[0]);
+                for (let j = 1; j < points.length; j++) ctx.lineTo(...points[j]);
+                ctx.stroke();
+                ctx.fillStyle = colors[cat];
+                rr(ctx, hx - c * .33, hy - c * .33, c * .66, c * .66, c * .18); ctx.fill();
+                for (const side of [-1, 1]) {
+                    ctx.beginPath(); ctx.moveTo(hx + side * c * .3, hy - c * .16);
+                    ctx.lineTo(hx + side * c * .24, hy - c * .47);
+                    ctx.lineTo(hx + side * c * .04, hy - c * .28); ctx.fill();
+                }
+                txt(ctx, String(cat + 1), hx, hy, c * .32, PAL.bg, { align: 'center', base: 'middle' });
+            });
+            before.crates.forEach((id, box) => {
+                const [ax, ay] = pos(id), [bx, by] = pos(after.crates[box]);
+                const x = lerp(ax, bx, blend), y = lerp(ay, by, blend);
+                ctx.fillStyle = PAL.sun; ctx.strokeStyle = PAL.bg; ctx.lineWidth = 2;
+                rr(ctx, x - c * .34, y - c * .34, c * .68, c * .68, 3); ctx.fill(); ctx.stroke();
+                ctx.beginPath(); ctx.moveTo(x, y - c * .29); ctx.lineTo(x, y + c * .29); ctx.stroke();
+            });
+            ctx.globalAlpha = 1;
+            hud(ctx, w, h, 'LEVEL 08', index === count ? 'HOME!' : `MOVE ${index}`);
+        }
+    },
+    /* 挪挪动物园 — original first-stage footprints and verified slide sequence */
+    zoo: {
+        pieces: [
+            { id: 'A', x: 5, y: 0, col: PAL.acid, cells: [[0,0]], face: [0,0], panda: true },
+            { id: 'D', x: 1, y: 0, col: PAL.pink, cells: [[0,0],[0,1],[0,2],[1,0],[1,2]], face: [0,1] },
+            { id: 'E', x: 2, y: 2, col: PAL.violet, cells: [[0,1],[0,2],[1,0],[1,1],[1,2]], face: [1,0] },
+            { id: 'F', x: 1, y: 3, col: PAL.sun, cells: [[0,0],[0,1],[0,2],[1,2]], face: [0,1] },
+            { id: 'H', x: 4, y: 1, col: PAL.cyan, cells: [[0,0],[0,1],[1,0]], face: [0,0] }
+        ],
+        moves: [
+            ['F',-1,0], ['F',0,-1], ['E',0,1], ['H',-1,0], ['H',0,-1],
+            ['E',0,-1], ['A',0,1], ['H',1,0], ['A',0,1], ['H',0,1],
+            ['A',0,1], ['H',0,1], ['A',0,1], ['H',0,1], ['A',0,1],
+            ['A',-1,0], ['A',-1,0], ['A',-1,0], ['A',-1,0], ['A',-1,0]
+        ],
+        replay() {
+            let pieces = this.pieces.map(piece => ({ ...piece }));
+            const frames = [pieces];
+            this.moves.forEach(([id, dx, dy]) => {
+                pieces = pieces.map(piece => piece.id === id
+                    ? { ...piece, x: piece.x + dx, y: piece.y + dy } : piece);
+                frames.push(pieces);
+            });
+            return frames;
+        },
+        draw(ctx, w, h, t, dt, state = {}) {
             screenBg(ctx, w, h);
             const c = Math.min(w * .64, h * .68) / 6;
             const ox = (w - 6 * c) / 2, oy = (h - 6 * c) / 2 + h * .05;
-            const p = t % 6, progress = ease(seg(p, .7, 3.8));
+            state.frames ||= this.replay();
+            const p = t % 13;
+            const progress = Math.max(0, Math.min(this.moves.length, (p - .5) / .5));
+            const index = Math.floor(progress), blend = ease(progress - index);
+            const before = state.frames[index], after = state.frames[Math.min(index + 1, this.moves.length)];
             ctx.fillStyle = PAL.dim;
             rr(ctx, ox - 8, oy - 8, 6 * c + 16, 6 * c + 16, 12); ctx.fill();
             for (let y = 0; y < 6; y++) for (let x = 0; x < 6; x++) {
                 ctx.fillStyle = 'rgba(245,241,230,.07)';
                 rr(ctx, ox + x * c + 1, oy + y * c + 1, c - 2, c - 2, 3); ctx.fill();
             }
-            const pieces = [
-                { x: 0, y: 0, col: PAL.cyan, cells: [[0,0],[1,0],[2,0],[0,1],[2,1]], face: [1,.15] },
-                { x: 4, y: progress, col: PAL.pink, cells: [[0,0],[1,0],[0,1],[1,1],[0,2]], face: [.5,.7] },
-                { x: 0, y: 3, col: PAL.violet, cells: [[0,0],[1,0],[0,1],[1,1],[0,2]], face: [.5,.4] },
-                { x: 2, y: 4, col: PAL.sun, cells: [[0,0],[1,0],[1,1],[2,1]], face: [.5,.15] },
-                { x: 3, y: 2 + ease(seg(p, 2.2, 4.6)) * 1.2, col: PAL.acid, cells: [[0,0]], face: [0,0], panda: true }
-            ];
-            pieces.forEach(piece => {
+            ctx.strokeStyle = PAL.acid; ctx.lineWidth = 1.5;
+            ctx.setLineDash([3, 3]);
+            ctx.strokeRect(ox + 2, oy + 5 * c + 2, c - 4, c - 4);
+            ctx.setLineDash([]);
+            before.forEach((piece, i) => {
+                const px = lerp(piece.x, after[i].x, blend), py = lerp(piece.y, after[i].y, blend);
+                ctx.save();
+                ctx.translate(ox + px * c, oy + py * c);
+                // Filled union and perimeter-only outline: neighbouring cells form one rigid block.
                 ctx.fillStyle = piece.col;
+                ctx.beginPath();
+                piece.cells.forEach(([x, y]) => ctx.rect(x * c, y * c, c, c));
+                ctx.fill();
+                const occupied = new Set(piece.cells.map(cell => cell.join(',')));
+                ctx.strokeStyle = PAL.bg; ctx.lineWidth = Math.max(1.5, c * .06);
+                ctx.lineJoin = 'round'; ctx.beginPath();
                 piece.cells.forEach(([x, y]) => {
-                    rr(ctx, ox + (piece.x + x) * c + 2, oy + (piece.y + y) * c + 2, c - 4, c - 4, 4); ctx.fill();
+                    for (const [dx, dy, ax, ay, bx, by] of [
+                        [0,-1,x,y,x+1,y], [1,0,x+1,y,x+1,y+1],
+                        [0,1,x+1,y+1,x,y+1], [-1,0,x,y+1,x,y]
+                    ]) if (!occupied.has(`${x + dx},${y + dy}`)) {
+                        ctx.moveTo(ax * c, ay * c); ctx.lineTo(bx * c, by * c);
+                    }
                 });
-                const fx = ox + (piece.x + piece.face[0] + .5) * c;
-                const fy = oy + (piece.y + piece.face[1] + .5) * c;
+                ctx.stroke();
+                const fx = (piece.face[0] + .5) * c;
+                const fy = (piece.face[1] + .5) * c;
                 ctx.fillStyle = PAL.bg;
                 for (const side of [-1, 1]) {
                     ctx.beginPath();
@@ -1459,8 +1744,9 @@ const SCENES = {
                         ctx.beginPath(); ctx.arc(fx + side * c * .26, fy - c * .29, c * .09, 0, Math.PI * 2); ctx.fill();
                     }
                 }
+                ctx.restore();
             });
-            hud(ctx, w, h, 'NUDGE ZOO', 'SLIDE & SOLVE');
+            hud(ctx, w, h, 'NUDGE ZOO', index === this.moves.length ? 'HOME!' : `MOVE ${index}`);
         }
     },
     /* 谁是挪车王 — rush-hour board, blockers slide, red car exits */

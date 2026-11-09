@@ -990,6 +990,16 @@ img {
     grid-row: span 2;
 }
 
+@media (min-width: 1025px) {
+    .game-grid:has(.featured) { grid-template-columns: repeat(6, minmax(0, 1fr)); }
+    .game-grid:has(.featured) > .game-card { grid-column: span 2; }
+    .game-grid:has(.featured) > .game-card.featured { grid-column: span 3; grid-row: auto; }
+}
+
+@media (min-width: 641px) and (max-width: 1024px) {
+    .game-card.featured { grid-column: auto; grid-row: auto; }
+}
+
 .game-card.dimmed {
     opacity: .25;
     filter: grayscale(1);
